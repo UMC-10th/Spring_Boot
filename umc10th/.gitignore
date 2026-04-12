@@ -1,0 +1,31 @@
+# 디폴트 무시된 파일
+/shelf/
+/.idea/workspace.xml
+# 에디터 기반 HTTP 클라이언트 요청
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### 민감정보 ###
+.env
+application.yml
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
