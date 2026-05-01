@@ -5,6 +5,6 @@ import org.springframework.http.HttpStatus;
 public interface BaseErrorCode {
 
     HttpStatus getStatus();
-    String GetCode();
-    String GetMessage();
+    String getCode();
+    String getMessage();
 }
