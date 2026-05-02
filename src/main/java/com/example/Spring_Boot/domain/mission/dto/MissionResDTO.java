@@ -37,4 +37,10 @@ public class MissionResDTO {
             String name
     ) {
     }
+
+    public record MissionSuccessResponse(
+            Long userMissionId,
+            Status status
+    ) {
+    }
 }

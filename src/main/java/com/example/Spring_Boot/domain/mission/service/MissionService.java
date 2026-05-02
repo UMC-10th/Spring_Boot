@@ -5,5 +5,6 @@ import com.example.Spring_Boot.domain.mission.enums.Status;
 
 public class MissionService {
     public MissionResDTO.MissionListResponse getUserMissions(Status status, String authorization) {
+        return null;
     }
 }
