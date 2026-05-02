@@ -17,12 +17,16 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     // 리뷰 작성
-    @PostMapping("stores/{storeId}/reviews")
+    @PostMapping("/stores/{storeId}/reviews")
     public ApiResponse<ReviewResDTO.CreateReviewResponse> createReview(
-            @RequestBody ReviewReqDTO.CreateReviewRequest dto,
-            @PathVariable("storeId") Integer storeId
-            ){
+            @PathVariable("storeId") Integer storeId,
+            @RequestHeader("Authorization") String authorization,
+            @RequestBody ReviewReqDTO.CreateReviewRequest dto
+    ) {
         BaseSuccessCode code = ReviewSuccessCode.REVIEW_CREATED;
-        return ApiResponse.onSuccess(code, reviewService.createReview(dto));
+        return ApiResponse.onSuccess(
+                code,
+                reviewService.createReview(storeId, authorization, dto)
+        );
     }
 }

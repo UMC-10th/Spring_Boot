@@ -13,6 +13,6 @@ public class ReviewService {
         this.reviewRepository = reviewRepository;
     }
 
-    public ReviewResDTO.CreateReviewResponse createReview(ReviewReqDTO.CreateReviewRequest dto) {
+    public ReviewResDTO.CreateReviewResponse createReview(Integer storeId, String authorization , ReviewReqDTO.CreateReviewRequest dto) {
     }
 }
