@@ -1,5 +1,6 @@
 package com.example.Spring_Boot.domain.mission.controller;
 
+import com.example.Spring_Boot.domain.mission.dto.MissionReqDTO;
 import com.example.Spring_Boot.domain.mission.dto.MissionResDTO;
 import com.example.Spring_Boot.domain.mission.enums.Status;
 import com.example.Spring_Boot.domain.mission.exception.code.MissionSuccessCode;
@@ -7,10 +8,7 @@ import com.example.Spring_Boot.domain.mission.service.MissionService;
 import com.example.Spring_Boot.global.apiPayload.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,5 +29,20 @@ public class MissionController {
                 MissionSuccessCode.USER_MISSION_LIST_OK,
                 response
         );
+    }
+
+    // 미션 완료
+    @PatchMapping("/{userMissionId}")
+    public ApiResponse<MissionResDTO.MissionSuccessResponse> completeUserMission(
+            @PathVariable("userMissionId") Long userMissionId,
+            @RequestHeader("Authorization") String authorization,
+            @RequestBody MissionReqDTO.MissionSuccessRequest request
+    ) {
+        MissionResDTO.MissionSuccessResponse response =
+                missionService.completeUserMission(
+                        userMissionId,
+                        authorization,
+                        request
+                );
     }
 }
