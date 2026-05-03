@@ -10,5 +10,6 @@ public class MissionService {
     }
 
     public MissionResDTO.MissionSuccessResponse completeUserMission(Long userMissionId, String authorization, MissionReqDTO.MissionSuccessRequest request) {
+        return null;
     }
 }
