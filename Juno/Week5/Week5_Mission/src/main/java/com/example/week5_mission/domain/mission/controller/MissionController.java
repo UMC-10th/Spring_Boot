@@ -34,6 +34,6 @@ public class MissionController {
             @RequestHeader("Authorization") String auth
     ){
         BaseSuccessCode code = GeneralSuccessCode.OK;
-        return ApiResponse.onSuccess(code, missionService.missionSuccess(missionId, auth))
+        return ApiResponse.onSuccess(code, missionService.missionSuccess(missionId, auth));
     }
 }
