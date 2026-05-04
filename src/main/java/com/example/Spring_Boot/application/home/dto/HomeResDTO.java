@@ -1,4 +1,4 @@
-package com.example.Spring_Boot.domain.home.dto;
+package com.example.Spring_Boot.application.home.dto;
 
 import com.example.Spring_Boot.domain.mission.enums.Status;
 import com.fasterxml.jackson.annotation.JsonProperty;
