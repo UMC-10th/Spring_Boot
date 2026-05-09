@@ -36,6 +36,22 @@ public class MemberService {
         return MemberConverter.toMemberInfoDTO(member);
     }
 
+    public MemberResDTO.MyPageDTO getMyPage(Long memberId) {
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+
+        Long reviewCount = memberRepository.countReviewByMemberId(memberId);
+
+        return MemberResDTO.MyPageDTO.builder()
+                .memberId(member.getId())
+                .nickname(member.getNickname())
+                .email(member.getEmail())
+                .point(member.getPoint())
+                .reviewCount(reviewCount)
+                .build();
+    }
+
     @Transactional
     public String deleteMember(Long memberId) {
 

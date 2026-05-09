@@ -29,4 +29,14 @@ public class MemberResDTO {
             LocalDateTime createdAt
     ) {
     }
+
+    @Builder
+    public record MyPageDTO(
+            Long memberId,
+            String nickname,
+            String email,
+            Integer point,
+            Long reviewCount
+    ) {
+    }
 }
