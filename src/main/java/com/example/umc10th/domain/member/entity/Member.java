@@ -1,11 +1,14 @@
 package com.example.umc10th.domain.member.entity;
 
 import com.example.umc10th.domain.member.enums.Gender;
+import com.example.umc10th.domain.review.entity.Review;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -20,20 +23,16 @@ public class Member {
     @Column(name = "member_id")
     private Long id;
 
-    @Column(nullable = false, length = 50)
     private String email;
 
-    @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false, length = 30)
     private String nickname;
 
-    @Column(name = "phone_number", length = 20)
+    @Column(name = "phone_number")
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 20)
     private Gender gender;
 
     private LocalDate birth;
@@ -43,9 +42,12 @@ public class Member {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
+    @OneToMany(mappedBy = "member")
+    private List<Review> reviewList = new ArrayList<>();
+
     @PrePersist
     public void prePersist() {
-        this.point = this.point == null ? 0 : this.point;
         this.createdAt = LocalDateTime.now();
+        this.point = 0;
     }
 }
