@@ -9,14 +9,22 @@ import org.springframework.data.repository.query.Param;
 
 public interface MemberMissionRepository extends JpaRepository<MemberMission, Long> {
 
-    @Query("""
-            select mm
-            from MemberMission mm
-            join fetch mm.mission m
-            join fetch m.store s
-            where mm.member.id = :memberId
-            and mm.isComplete = :isComplete
-            """)
+    @Query(
+            value = """
+                    select mm
+                    from MemberMission mm
+                    join fetch mm.mission m
+                    join fetch m.store s
+                    where mm.member.id = :memberId
+                    and mm.isComplete = :isComplete
+                    """,
+            countQuery = """
+                    select count(mm)
+                    from MemberMission mm
+                    where mm.member.id = :memberId
+                    and mm.isComplete = :isComplete
+                    """
+    )
     Page<MemberMission> findMyMissions(
             @Param("memberId") Long memberId,
             @Param("isComplete") Boolean isComplete,

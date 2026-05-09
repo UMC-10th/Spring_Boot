@@ -19,7 +19,6 @@ public class MissionController {
     public ApiResponse<MissionResDTO.CreateMissionResultDTO> createMission(
             @RequestBody MissionReqDTO.CreateMissionDTO request
     ) {
-
         return ApiResponse.onSuccess(
                 GeneralSuccessCode.OK,
                 missionService.createMission(request)
@@ -30,10 +29,20 @@ public class MissionController {
     public ApiResponse<MissionResDTO.MissionInfoDTO> getMission(
             @PathVariable Long missionId
     ) {
-
         return ApiResponse.onSuccess(
                 GeneralSuccessCode.OK,
                 missionService.getMission(missionId)
+        );
+    }
+
+    @GetMapping("/home")
+    public ApiResponse<MissionResDTO.HomeMissionListDTO> getHomeMissions(
+            @RequestParam Long locationId,
+            @RequestParam(defaultValue = "0") Integer page
+    ) {
+        return ApiResponse.onSuccess(
+                GeneralSuccessCode.OK,
+                missionService.getHomeMissions(locationId, page)
         );
     }
 }
