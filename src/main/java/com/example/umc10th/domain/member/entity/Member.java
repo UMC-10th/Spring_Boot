@@ -54,6 +54,19 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private SocialType socialType;
 
+    @Column(name = "point", nullable = false)
+    @Builder.Default
+    private Integer point = 0;
+
+    @Column(name = "email", length = 50)
+    private String email;
+
+    @Column(name = "phone_number", length = 11)
+    private String phoneNumber;
+
+    @Column(name = "profile_url", columnDefinition = "TEXT")
+    private String profileUrl;
+
     // 연관 관계
     @OneToMany(mappedBy = "member")
     private List<MemberFood> memberFoodList = new ArrayList<>();
