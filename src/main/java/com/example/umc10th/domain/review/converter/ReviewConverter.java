@@ -21,7 +21,7 @@ public class ReviewConverter {
     }
 
     // 엔티티 -> 응답
-    public static ReviewResDTO.CreateReview toReviewResDTO(Review review, List<String> photoUrls) {
+    public static ReviewResDTO.CreateReview toCreateReview(Review review, List<String> photoUrls) {
         return ReviewResDTO.CreateReview.builder()
                 .reviewId(review.getId())
                 .storeId(review.getStore().getId())
