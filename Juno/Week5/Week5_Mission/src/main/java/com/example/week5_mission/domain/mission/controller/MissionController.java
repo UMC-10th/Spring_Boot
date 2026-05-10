@@ -20,10 +20,10 @@ public class MissionController {
     @GetMapping("")
     public ApiResponse<MissionResDTO.MissionList> missions(
             @RequestHeader("Authorization") String auth,
-            @RequestBody MissionReqDTO.Missions dto
+            @RequestParam String queryParameter
     ){
         BaseSuccessCode code = GeneralSuccessCode.OK;
-        return ApiResponse.onSuccess(code, missionService.missions(auth, dto));
+        return ApiResponse.onSuccess(code, missionService.missions(auth, queryParameter));
     }
 
     // 미션 성공
