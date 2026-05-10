@@ -1,4 +1,5 @@
 HELP.md
+docs/
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
@@ -7,6 +8,8 @@ build/
 
 ### 민감정보 ###
 application.yml
+application.yaml
+.env
 
 ### STS ###
 .apt_generated
