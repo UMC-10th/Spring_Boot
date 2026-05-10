@@ -25,15 +25,4 @@ public class MissionController {
         BaseSuccessCode code = GeneralSuccessCode.OK;
         return ApiResponse.onSuccess(code, missionService.missions(auth, queryParameter));
     }
-
-    // 미션 성공
-    // Path Variable
-    @PostMapping("/{missionId}")
-    public ApiResponse<MissionResDTO.Mission> missionSuccess(
-            @PathVariable String missionId,
-            @RequestHeader("Authorization") String auth
-    ){
-        BaseSuccessCode code = GeneralSuccessCode.OK;
-        return ApiResponse.onSuccess(code, missionService.missionSuccess(missionId, auth));
-    }
 }
