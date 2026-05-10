@@ -3,6 +3,7 @@ package com.example.umc10th.domain.review.controller;
 import com.example.umc10th.domain.review.dto.ReviewReqDTO;
 import com.example.umc10th.domain.review.dto.ReviewResDTO;
 import com.example.umc10th.domain.review.exception.code.ReviewSuccessCode;
+import com.example.umc10th.domain.review.service.ReviewService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 public class ReviewController {
+    private final ReviewService reviewService;
 
     // private final ReviewService reviewService; 6주차에 활성화
 
@@ -40,17 +42,7 @@ public class ReviewController {
             @PathVariable Long storeId,
             @RequestBody ReviewReqDTO.CreateReview request
     ) {
-        // 6주차에서 reviewService.createReview(storeId, request)로 교체
-        ReviewResDTO.CreateReview result = ReviewResDTO.CreateReview.builder()
-                .reviewId(55L)
-                .storeId(storeId)
-                .memberId(1L)
-                .starRate(request.starRate())
-                .content(request.content())
-                .photoUrls(request.photoUrls())
-                .createdAt(LocalDateTime.now())
-                .build();
-
+        ReviewResDTO.CreateReview result = reviewService.createReview(storeId, request);
         return ApiResponse.onSuccess(ReviewSuccessCode.CREATE_REVIEW, result);
     }
 
