@@ -6,7 +6,9 @@ import com.example.Spring_Boot.domain.member.exception.code.MemberSuccessCode;
 import com.example.Spring_Boot.domain.member.service.MemberService;
 import com.example.Spring_Boot.global.apiPayload.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +19,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
 
     private final MemberService memberService;
+
+    @GetMapping("/me")
+    public ApiResponse<MemberResDTO.MyPageResponse> getMyPage(
+            @RequestHeader("Authorization") String authorization
+    ) {
+        MemberResDTO.MyPageResponse response = memberService.getMyPage(authorization);
+
+        return ApiResponse.onSuccess(
+                MemberSuccessCode.MEMBER_MY_PAGE_OK,
+                response
+        );
+    }
 
     @PostMapping
     public ApiResponse<MemberResDTO.CreateMemberResponse> createMember(

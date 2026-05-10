@@ -1,32 +1,53 @@
-package com.example.Spring_Boot.domain.mission.converter;
+package com.example.Spring_Boot.application.home.converter;
 
-import com.example.Spring_Boot.domain.mission.dto.MissionResDTO;
+import com.example.Spring_Boot.application.home.dto.HomeResDTO;
+import com.example.Spring_Boot.domain.member.entity.Member;
 import com.example.Spring_Boot.domain.mission.entity.Mission;
 import com.example.Spring_Boot.domain.mission.entity.mapping.UserMission;
 import com.example.Spring_Boot.domain.store.entity.Category;
+import com.example.Spring_Boot.domain.store.entity.Region;
 import com.example.Spring_Boot.domain.store.entity.Store;
 import org.springframework.data.domain.Page;
 
 import java.util.Map;
 
-public class MissionConverter {
+public class HomeConverter {
 
-    private MissionConverter() {
+    private HomeConverter() {
     }
 
-    public static MissionResDTO.MissionListResponse toMissionListResponse(
+    public static HomeResDTO.GetHomeResponse toGetHomeResponse(
+            Member member,
+            Region region,
+            Long completedCount,
             Page<UserMission> userMissionPage,
             Map<Long, Category> categoryByStoreId
     ) {
-        return MissionResDTO.MissionListResponse.builder()
+        return HomeResDTO.GetHomeResponse.builder()
+                .point(member.getPoint())
+                .region(toRegionInfo(region))
+                .missionProgress(toMissionProgressInfo(completedCount))
                 .missionList(userMissionPage.getContent().stream()
-                        .map(userMission -> toUserMissionInfo(userMission, categoryByStoreId))
+                        .map(userMission -> toMissionInfo(userMission, categoryByStoreId))
                         .toList())
                 .pageInfo(toPageInfo(userMissionPage))
                 .build();
     }
 
-    private static MissionResDTO.UserMissionInfo toUserMissionInfo(
+    private static HomeResDTO.RegionInfo toRegionInfo(Region region) {
+        return HomeResDTO.RegionInfo.builder()
+                .regionId(region.getRegionId())
+                .name(region.getName())
+                .build();
+    }
+
+    private static HomeResDTO.MissionProgressInfo toMissionProgressInfo(Long completedCount) {
+        return HomeResDTO.MissionProgressInfo.builder()
+                .completedCount(Math.toIntExact(completedCount))
+                .build();
+    }
+
+    private static HomeResDTO.MissionInfo toMissionInfo(
             UserMission userMission,
             Map<Long, Category> categoryByStoreId
     ) {
@@ -34,37 +55,37 @@ public class MissionConverter {
         Store store = mission.getStore();
         Category category = categoryByStoreId.get(store.getStoreId());
 
-        return MissionResDTO.UserMissionInfo.builder()
+        return HomeResDTO.MissionInfo.builder()
                 .userMissionId(userMission.getUserMissionId())
                 .status(userMission.getStatus())
                 .missionId(mission.getMissionId())
                 .missionContent(mission.getContent())
                 .compensation(mission.getCompensation())
-                .storeInfo(toStoreInfo(store))
-                .categoryInfo(toCategoryInfo(category))
+                .store(toStoreInfo(store))
+                .category(toCategoryInfo(category))
                 .build();
     }
 
-    private static MissionResDTO.StoreInfo toStoreInfo(Store store) {
-        return MissionResDTO.StoreInfo.builder()
+    private static HomeResDTO.StoreInfo toStoreInfo(Store store) {
+        return HomeResDTO.StoreInfo.builder()
                 .storeId(store.getStoreId())
                 .name(store.getName())
                 .build();
     }
 
-    private static MissionResDTO.CategoryInfo toCategoryInfo(Category category) {
+    private static HomeResDTO.CategoryInfo toCategoryInfo(Category category) {
         if (category == null) {
             return null;
         }
 
-        return MissionResDTO.CategoryInfo.builder()
+        return HomeResDTO.CategoryInfo.builder()
                 .categoryId(category.getCategoryId())
                 .name(category.getName())
                 .build();
     }
 
-    private static MissionResDTO.PageInfo toPageInfo(Page<UserMission> userMissionPage) {
-        return MissionResDTO.PageInfo.builder()
+    private static HomeResDTO.PageInfo toPageInfo(Page<UserMission> userMissionPage) {
+        return HomeResDTO.PageInfo.builder()
                 .page(userMissionPage.getNumber())
                 .size(userMissionPage.getSize())
                 .totalElements(userMissionPage.getTotalElements())

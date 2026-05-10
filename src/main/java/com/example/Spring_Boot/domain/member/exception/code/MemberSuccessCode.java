@@ -13,6 +13,11 @@ public enum MemberSuccessCode implements BaseSuccessCode {
             HttpStatus.CREATED,
             "MEMBER201_1",
             "사용자 생성에 성공했습니다."
+    ),
+    MEMBER_MY_PAGE_OK(
+            HttpStatus.OK,
+            "MEMBER200_1",
+            "마이페이지 조회에 성공했습니다."
     );
 
     private final HttpStatus status;
