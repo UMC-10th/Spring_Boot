@@ -7,7 +7,7 @@ import com.example.umc10th.domain.mission.service.MissionService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
 import com.example.umc10th.global.apiPayload.code.BaseSuccessCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,35 +20,37 @@ public class MissionController {
     // 홈 화면
     // TODO: Security 적용 후 매개변수 변경
     @GetMapping("/home")
-    public ResponseEntity<ApiResponse<MssionResDTO.GetHome>> getHome(
+    public ApiResponse<MssionResDTO.GetHome> getHome(
             @RequestParam Long memberId,
-            @RequestParam Long locationId
+            @RequestParam Long locationId,
+            Pageable pageable
     ) {
         MissionReqDTO.GetHome req = new MissionReqDTO.GetHome(memberId, locationId);
         BaseSuccessCode code = MissionSuccessCode.HOME_OK;
-        return ApiResponse.of(code, missionService.getHome(req));
+        return ApiResponse.success(code, missionService.getHome(req, pageable));
     }
 
     // 내 미션 목록 조회
     // TODO: Security 적용 후 매개변수 변경
     @GetMapping("/my/missions")
-    public ResponseEntity<ApiResponse<MssionResDTO.GetMyMissions>> getMyMissions(
+    public ApiResponse<MssionResDTO.GetMyMissions> getMyMissions(
             @RequestParam Long memberId,
-            @RequestParam Boolean isComplete
+            @RequestParam(required = false) Boolean isComplete,
+            Pageable pageable
     ) {
         MissionReqDTO.GetMyMissions req = new MissionReqDTO.GetMyMissions(memberId, isComplete);
         BaseSuccessCode code = MissionSuccessCode.MY_MISSIONS_OK;
-        return ApiResponse.of(code, missionService.getMyMissions(req));
+        return ApiResponse.success(code, missionService.getMyMissions(req, pageable));
     }
 
     //  미션 완료 처리
     // PATCH /api/v1/my/missions/{missionId}/complete
     @PatchMapping("/my/missions/{missionId}/complete")
-    public ResponseEntity<ApiResponse<MssionResDTO.CompleteMission>> completeMission(
+    public ApiResponse<MssionResDTO.CompleteMission> completeMission(
             @PathVariable Long missionId
     ) {
         BaseSuccessCode code = MissionSuccessCode.MISSION_COMPLETE_OK;
-        return ApiResponse.of(code, missionService.completeMission(missionId));
+        return ApiResponse.success(code, missionService.completeMission(missionId));
     }
 }
 

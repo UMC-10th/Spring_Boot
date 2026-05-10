@@ -7,7 +7,6 @@ import com.example.umc10th.domain.review.service.ReviewService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
 import com.example.umc10th.global.apiPayload.code.BaseSuccessCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,12 +19,12 @@ public class ReviewController {
     // 리뷰 작성
     // POST /api/v1/stores/{storeId}/reviews
     @PostMapping("/stores/{storeId}/reviews")
-    public ResponseEntity<ApiResponse<ReviewResDTO.CreateReview>> createReview(
+    public ApiResponse<ReviewResDTO.CreateReview> createReview(
             @PathVariable Long storeId,
             @RequestBody ReviewReqDTO.CreateReview dto
     ) {
         BaseSuccessCode code = ReviewSuccessCode.REVIEW_CREATED;
-        return ApiResponse.of(code, reviewService.createReview(storeId, dto));
+        return ApiResponse.success(code, reviewService.createReview(storeId, dto));
     }
 }
 
