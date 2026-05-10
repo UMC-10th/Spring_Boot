@@ -10,6 +10,7 @@ public class MissionResponseDto {
     public record GetMissions (
             List<GetMission> missions
     ){
+        @Builder
         public record GetMission (
             String title,
             String content,

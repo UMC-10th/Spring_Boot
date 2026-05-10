@@ -2,6 +2,7 @@ package com.umc.umc10th.domain.user.controller;
 
 import com.umc.umc10th.domain.user.apipayload.code.UserSuccessCode;
 import com.umc.umc10th.domain.user.dto.request.UserRequestDto;
+import com.umc.umc10th.domain.user.service.UserService;
 import com.umc.umc10th.global.apipayload.ApiResponse;
 import com.umc.umc10th.global.apipayload.code.BaseSuccessCode;
 import lombok.RequiredArgsConstructor;
@@ -14,10 +15,10 @@ public class UserAuthController {
 
     private final UserService userService;
 
-    @PostMapping("/signup")
-    public ApiResponse<Void> getInfo(@RequestBody UserRequestDto.CreateUser dto) {
-        BaseSuccessCode code = UserSuccessCode.OK;
-        userService.createUser(dto);
-        return ApiResponse.onSuccess(code);
-    }
+//    @PostMapping("/signup")
+//    public ApiResponse<Void> getInfo(@RequestBody UserRequestDto.CreateUser dto) {
+//        BaseSuccessCode code = UserSuccessCode.OK;
+//        userService.createUser(dto);
+//        return ApiResponse.onSuccess(code);
+//    }
 }

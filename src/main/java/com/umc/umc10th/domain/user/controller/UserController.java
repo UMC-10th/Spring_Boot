@@ -3,6 +3,7 @@ package com.umc.umc10th.domain.user.controller;
 import com.umc.umc10th.domain.mission.dto.response.MissionResponseDto;
 import com.umc.umc10th.domain.user.apipayload.code.UserSuccessCode;
 import com.umc.umc10th.domain.user.dto.response.UserResponseDto;
+import com.umc.umc10th.domain.user.service.UserService;
 import com.umc.umc10th.global.apipayload.ApiResponse;
 import com.umc.umc10th.global.apipayload.code.BaseSuccessCode;
 import lombok.RequiredArgsConstructor;
@@ -30,9 +31,9 @@ public class UserController {
         return ApiResponse.onSuccess(code, userService.getMissions(locationId, status));
     }
 
-    @GetMapping("/me/missions/count")
-    public ApiResponse<MissionResponseDto.CountMissions> countMissions(@RequestParam Long locationId) {
-        BaseSuccessCode code = UserSuccessCode.OK;
-        return ApiResponse.onSuccess(code, userService.countMissions(locationId));
-    }
+//    @GetMapping("/me/missions/count")
+//    public ApiResponse<MissionResponseDto.CountMissions> countMissions(@RequestParam Long locationId) {
+//        BaseSuccessCode code = UserSuccessCode.OK;
+//        return ApiResponse.onSuccess(code, userService.countMissions(locationId));
+//    }
 }
