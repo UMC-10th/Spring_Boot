@@ -8,7 +8,8 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum ReviewErrorCode implements BaseErrorCode {
-    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "REVIEW404_1", "존재하지 않는 리뷰입니다.");
+    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "REVIEW404_1", "존재하지 않는 리뷰입니다."),
+    STORE_NOT_FOUND(HttpStatus.NOT_FOUND, "REVIEW404_2", "가게를 찾을 수 없습니다.");
 
     private final HttpStatus status;
     private final String code;
