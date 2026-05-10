@@ -38,14 +38,9 @@ public class ApiResponse<T> {
         this.result = result;
     }
 
-    // [성공] 커스텀 성공 상태
-    public static <T> ResponseEntity<ApiResponse<T>> of(BaseSuccessCode code, T result) {
-        if (code.getStatus() == HttpStatus.NO_CONTENT) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity
-                .status(code.getStatus())
-                .body(onSuccessBody(code, result));
+    // [성공]
+    public static <T> ApiResponse<T> success(BaseSuccessCode code, T result) {
+        return new ApiResponse<>(true, code.getCode(), code.getMessage(), result);
     }
 
     // [실패] 에러 핸들러에서 사용 (데이터 없는 일반 에러)
@@ -60,10 +55,6 @@ public class ApiResponse<T> {
         return ResponseEntity
                 .status(code.getStatus())
                 .body(onFailureBody(code, result));
-    }
-
-    private static <T> ApiResponse<T> onSuccessBody(BaseSuccessCode code, T result) {
-        return new ApiResponse<>(true, code.getCode(), code.getMessage(), result);
     }
 
     private static <T> ApiResponse<T> onFailureBody(BaseErrorCode code, T result) {
