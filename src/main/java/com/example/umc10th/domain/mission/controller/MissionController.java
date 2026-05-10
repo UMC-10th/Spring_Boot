@@ -35,7 +35,8 @@ public class MissionController {
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size
     ) {
-        MissionResDTO.MissionList result = missionService.getMissions(areaId, page, size);
+        Long userId = 1L;
+        MissionResDTO.MissionList result = missionService.getMissions(userId,areaId, page, size);
         return ApiResponse.onSuccess(MissionSuccessCode.MISSION_LIST_OK, result);
     }
 

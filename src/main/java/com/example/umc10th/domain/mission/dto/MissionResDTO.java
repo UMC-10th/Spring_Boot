@@ -22,6 +22,9 @@ public class MissionResDTO {
         private String title;
         private Integer pointReward;
         private String description;
+        private String restaurantName;
+        private String foodType;
+        private LocalDateTime deadline;
     }
 
     @Builder
