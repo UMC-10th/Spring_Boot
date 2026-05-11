@@ -23,7 +23,7 @@ public class Mission extends BaseEntity {
     @Column(name = "deadline", nullable = false)
     private LocalDate deadline;
 
-    @Column(name = "condition", nullable = false, columnDefinition = "text")
+    @Column(name = "mission_condition", nullable = false, columnDefinition = "text")
     private String condition;
 
     @Column(name = "point", nullable = false)

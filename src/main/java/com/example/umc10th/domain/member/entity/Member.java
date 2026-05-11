@@ -73,15 +73,23 @@ public class Member extends BaseEntity {
 
     // createdAt, updatedAt, deletedAt은 BaseEntity에서 상속받음
 
+    @Builder.Default
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<MemberFood> memberFoods = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<MemberTerm> memberTerms = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<MemberMission> memberMissions = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<Review> reviews = new ArrayList<>();
+
+    public void addPoint(Integer point) {
+        this.point = (this.point == null ? 0 : this.point) + (point == null ? 0 : point);
+    }
 }

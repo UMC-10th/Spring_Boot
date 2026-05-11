@@ -9,6 +9,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Builder
@@ -26,6 +28,9 @@ public class MemberMission {
     @Column(name = "is_complete", nullable = false)
     private Boolean isComplete = false;
 
+    @Column(name = "completed_at", columnDefinition = "DATETIME")
+    private LocalDateTime completedAt;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
@@ -33,4 +38,10 @@ public class MemberMission {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mission_id", nullable = false)
     private Mission mission;
+
+    // 미션 완료 처리
+    public void complete() {
+        this.isComplete = true;
+        this.completedAt = LocalDateTime.now();
+    }
 }

@@ -21,6 +21,7 @@ public class MissionController {
 
 	private final MissionService missionService;
 
+	// 내 미션 목록 조회
 	@GetMapping("")
 	public ApiResponse<MissionResDTO.MissionList> getMissionList(
 			@ModelAttribute MissionReqDTO.MissionListRequest request
@@ -31,6 +32,7 @@ public class MissionController {
 		);
 	}
 
+	// 미션 완료
 	@PatchMapping("/{memberMissionId}/complete")
 	public ApiResponse<MissionResDTO.CompleteMission> completeMission(
 			@PathVariable Long memberMissionId,

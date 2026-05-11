@@ -1,6 +1,7 @@
 package com.example.umc10th.domain.member.converter;
 
 import com.example.umc10th.domain.member.dto.MemberResDTO;
+import com.example.umc10th.domain.member.entity.Member;
 
 public class MemberConverter {
 
@@ -15,14 +16,14 @@ public class MemberConverter {
 		return new MemberResDTO.SignUp(memberId, nickname, email);
 	}
 
-	public static MemberResDTO.GetInfo toGetInfoResponse(
-			Long memberId,
-			String nickname,
-			String email,
-			String phoneNumber,
-			Integer point,
-			String profileUrl
-	) {
-		return new MemberResDTO.GetInfo(memberId, nickname, email, phoneNumber, point, profileUrl);
+	public static MemberResDTO.MyPage toMyPageResponse(Member member) {
+		return new MemberResDTO.MyPage(
+				member.getId(),
+				member.getNickname(),
+				member.getEmail(),
+				member.getPhoneNumber(),
+				member.getPoint(),
+				member.getProfileUrl()
+		);
 	}
 }
