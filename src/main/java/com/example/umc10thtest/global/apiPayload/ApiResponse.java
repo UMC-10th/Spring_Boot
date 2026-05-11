@@ -1,5 +1,4 @@
 package com.example.umc10thtest.global.apiPayload;
-
 import com.example.umc10thtest.global.apiPayload.code.BaseErrorCode;
 import com.example.umc10thtest.global.apiPayload.code.BaseSuccessCode;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -1,4 +1,7 @@
 package com.example.umc10thtest.domain.member.repository;
 
-public interface MemberRepository {
+import com.example.umc10thtest.domain.member.entity.Member;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface MemberRepository extends JpaRepository<Member, Long> {
 }
