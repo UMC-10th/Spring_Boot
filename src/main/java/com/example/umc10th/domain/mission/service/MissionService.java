@@ -22,7 +22,7 @@ public class MissionService {
     // 내 미션 목록 (진행중 / 완료 + 페이징)
     public MissionResDTO.MissionList getMemberMissions(Long memberId, String status, Integer page, Integer size) {
         // status를 Boolean으로 변환
-        Boolean isComplete = "COMPLETE".equals(status);
+        Boolean isComplete = "COMPLETED".equals(status);
 
         // Pageable 객체 생성
         Pageable pageable = PageRequest.of(page, size);
