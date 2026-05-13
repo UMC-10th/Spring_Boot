@@ -28,6 +28,7 @@ public class ReviewService {
     private final MemberMissionRepository memberMissionRepository;
 
     // 리뷰 작성
+    @Transactional
     public ReviewResDTO.CreateReview createReview(Long storeId, ReviewReqDTO.CreateReview request) {
         // 1. memberMissionId로 사용자 식별
         MemberMission memberMission = memberMissionRepository.findById(request.memberMissionId())
