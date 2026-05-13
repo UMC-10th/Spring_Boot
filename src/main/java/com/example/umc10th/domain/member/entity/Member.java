@@ -41,6 +41,7 @@ public class Member extends BaseEntity {
     @Column(nullable = false, length = 10)
     private String nickname;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Address address;
 
