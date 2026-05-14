@@ -46,10 +46,10 @@ public class MemberService {
     }
 
     public MemberResDTO.MyPage getMyPage(Long memberId) {
-        Member member = memberRepository.findByMemberIdAndDeletedAtIsNull(memberId)
+        Member member = memberRepository.findByIdAndDeletedAtIsNull(memberId)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
-        long reviewCount = reviewRepository.countByMemberMemberId(memberId);
+        long reviewCount = reviewRepository.countByMemberId(memberId);
 
         return MemberConverter.toMyPage(member, reviewCount);
     }
@@ -57,7 +57,7 @@ public class MemberService {
     public MemberResDTO.MissionList getMyMissions(
             Long memberId, String status, Integer page, Integer size) {
 
-        if (memberRepository.findByMemberIdAndDeletedAtIsNull(memberId).isEmpty()) {
+        if (memberRepository.findByIdAndDeletedAtIsNull(memberId).isEmpty()) {
             throw new MemberException(MemberErrorCode.MEMBER_NOT_FOUND);
         }
 

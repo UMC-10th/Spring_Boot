@@ -34,7 +34,7 @@ public class MissionService {
     public MissionResDTO.MissionList getMissions(
             Long memberId, Long areaId, Integer page, Integer size) {
 
-        if (memberRepository.findByMemberIdAndDeletedAtIsNull(memberId).isEmpty()) {
+        if (memberRepository.findByIdAndDeletedAtIsNull(memberId).isEmpty()) {
             throw new MemberException(MemberErrorCode.MEMBER_NOT_FOUND);
         }
 
@@ -46,7 +46,7 @@ public class MissionService {
         return MissionConverter.toMissionList(result);
     }
     public MissionResDTO.Progress getProgress(Long memberId) {
-        if (memberRepository.findByMemberIdAndDeletedAtIsNull(memberId).isEmpty()) {
+        if (memberRepository.findByIdAndDeletedAtIsNull(memberId).isEmpty()) {
             throw new MemberException(MemberErrorCode.MEMBER_NOT_FOUND);
         }
 
@@ -61,7 +61,7 @@ public class MissionService {
     }
     @Transactional
     public MissionResDTO.ParticipateResult participate(Long memberId, Long missionId) {
-        Member member = memberRepository.findByMemberIdAndDeletedAtIsNull(memberId)
+        Member member = memberRepository.findByIdAndDeletedAtIsNull(memberId)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
         Mission mission = missionRepository.findById(missionId)

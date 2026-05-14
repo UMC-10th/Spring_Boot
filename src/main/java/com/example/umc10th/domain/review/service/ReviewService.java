@@ -28,7 +28,7 @@ public class ReviewService {
 
     @Transactional
     public ReviewResDTO.CreateResult create(Long memberId, ReviewReqDTO.Create req) {
-        Member member = memberRepository.findByMemberIdAndDeletedAtIsNull(memberId)
+        Member member = memberRepository.findByIdAndDeletedAtIsNull(memberId)
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
 
         Restaurant restaurant = restaurantRepository.findById(req.restaurantId())

@@ -5,6 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ReviewRepository extends JpaRepository<Review, Long> {
 
-    long countByMemberMemberId(Long memberId);
+    long countByMemberId(Long memberId);
 }
-

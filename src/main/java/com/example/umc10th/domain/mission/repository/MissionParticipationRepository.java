@@ -15,14 +15,14 @@ public interface MissionParticipationRepository extends JpaRepository<MissionPar
     @Query("""
             SELECT COUNT(mp)
             FROM MissionParticipation mp
-            WHERE mp.member.memberId = :memberId
+            WHERE mp.member.id = :memberId
             """)
     long countByMemberId(@Param("memberId") Long memberId);
 
     @Query("""
             SELECT COUNT(mp)
             FROM MissionParticipation mp
-            WHERE mp.member.memberId = :memberId
+            WHERE mp.member.id = :memberId
             AND mp.missionStatus = :status
             """)
     long countByMemberIdAndMissionStatus(
@@ -33,7 +33,7 @@ public interface MissionParticipationRepository extends JpaRepository<MissionPar
     @Query("""
             SELECT CASE WHEN COUNT(mp) > 0 THEN TRUE ELSE FALSE END
             FROM MissionParticipation mp
-            WHERE mp.member.memberId = :memberId
+            WHERE mp.member.id = :memberId
             AND mp.mission.missionId = :missionId
             """)
     boolean existsByMemberIdAndMissionId(
@@ -45,7 +45,7 @@ public interface MissionParticipationRepository extends JpaRepository<MissionPar
             SELECT mp
             FROM MissionParticipation mp
             JOIN FETCH mp.mission
-            WHERE mp.member.memberId = :memberId
+            WHERE mp.member.id = :memberId
             AND mp.mission.missionId = :missionId
             """)
     Optional<MissionParticipation> findByMemberIdAndMissionId(
@@ -58,13 +58,13 @@ public interface MissionParticipationRepository extends JpaRepository<MissionPar
                     SELECT mp
                     FROM MissionParticipation mp
                     JOIN FETCH mp.mission m
-                    WHERE mp.member.memberId = :memberId
+                    WHERE mp.member.id = :memberId
                     AND mp.missionStatus = :status
                     """,
             countQuery = """
                     SELECT COUNT(mp)
                     FROM MissionParticipation mp
-                    WHERE mp.member.memberId = :memberId
+                    WHERE mp.member.id = :memberId
                     AND mp.missionStatus = :status
                     """
     )

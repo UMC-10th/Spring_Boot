@@ -6,6 +6,5 @@ import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
-    Optional<Member> findByMemberIdAndDeletedAtIsNull(Long memberId);
+    Optional<Member> findByIdAndDeletedAtIsNull(Long memberId);
 }
-

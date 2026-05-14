@@ -22,7 +22,7 @@ public interface MissionRepository extends JpaRepository<Mission, Long> {
               AND m.missionId NOT IN (
                   SELECT mp.mission.missionId
                   FROM MissionParticipation mp
-                  WHERE mp.member.memberId = :memberId
+                  WHERE mp.member.id = :memberId
               )
             """,
             countQuery = """
@@ -33,7 +33,7 @@ public interface MissionRepository extends JpaRepository<Mission, Long> {
               AND m.missionId NOT IN (
                   SELECT mp.mission.missionId
                   FROM MissionParticipation mp
-                  WHERE mp.member.memberId = :memberId
+                  WHERE mp.member.id = :memberId
               )
             """
     )

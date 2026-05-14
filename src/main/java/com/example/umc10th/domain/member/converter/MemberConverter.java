@@ -15,8 +15,8 @@ public class MemberConverter {
 
     public static MemberResDTO.MyPage toMyPage(Member member, long reviewCount) {
         return MemberResDTO.MyPage.builder()
-                .memberId(member.getMemberId())
-                .name(member.getMemberName())
+                .memberId(member.getId())
+                .name(member.getName())
                 .email(member.getEmail())
                 .point(member.getPoint())
                 .reviewCount((int) reviewCount)
@@ -49,7 +49,7 @@ public class MemberConverter {
 
 //    public static Member toMember(MemberReqDTO.Join joinDTO) {
 //        return Member.builder()
-//                .memberName(joinDTO.name())
+//                .name(joinDTO.name())
 //                .email(joinDTO.email())
 //                .password(joinDTO.password())   Member 엔티티에서 패스워드는 해싱되어 저장되어야 하므로, 실제로는 서비스 레이어에서 해싱 작업이 필요함
 //                .gender(joinDTO.gender())
@@ -58,4 +58,3 @@ public class MemberConverter {
 //                .build();
 //    }
 }
-

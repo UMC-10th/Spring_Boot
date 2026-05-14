@@ -20,10 +20,10 @@ public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id", nullable = false)
-    private Long memberId;
+    private Long id;
 
     @Column(name = "member_name", nullable = false, length = 30)
-    private String memberName;
+    private String name;
 
     @Column(name= "gender", nullable = false, length = 10)
     @Enumerated(EnumType.STRING)
@@ -53,4 +53,3 @@ public class Member extends BaseEntity {
     private LocalDateTime deletedAt;
 
 }
-
