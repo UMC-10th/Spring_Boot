@@ -15,6 +15,9 @@ import com.example.umc10th.domain.review.exception.ReviewException;
 import com.example.umc10th.domain.review.exception.code.ReviewErrorCode;
 import com.example.umc10th.domain.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,5 +48,12 @@ public class ReviewService {
 
         // 4. 응답 DTO 변환 (사진은 일단 빈 리스트로)
         return ReviewConverter.toCreateReview(savedReview, request.photoUrls());
+    }
+
+    // 리뷰 조회
+    public ReviewResDTO.MyReviewList getMyReviews(Long memberId, Integer page, Integer size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Review> reviewPage = reviewRepository.findByMemberId(memberId, pageable);
+        return ReviewConverter.toMyReviewList(reviewPage);
     }
 }

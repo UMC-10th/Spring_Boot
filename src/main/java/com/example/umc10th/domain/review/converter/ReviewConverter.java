@@ -5,6 +5,7 @@ import com.example.umc10th.domain.mission.entity.Store;
 import com.example.umc10th.domain.review.dto.ReviewReqDTO;
 import com.example.umc10th.domain.review.dto.ReviewResDTO;
 import com.example.umc10th.domain.review.entity.Review;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -33,4 +34,26 @@ public class ReviewConverter {
                 .build();
     }
 
+    // 내가 작성한 리뷰 단건 변환
+    public static ReviewResDTO.MyReviewInfo toMyReviewInfo(Review review) {
+        return ReviewResDTO.MyReviewInfo.builder()
+                .reviewId(review.getId())
+                .storeId(review.getStore().getId())
+                .storeName(review.getStore().getName())
+                .starRate(review.getStar())
+                .content(review.getContent())
+                .createdAt(review.getCreatedAt())
+                .build();
+    }
+
+    // 페이지 전체 변환
+    public static ReviewResDTO.MyReviewList toMyReviewList(Page<Review> reviewPage) {
+        List<ReviewResDTO.MyReviewInfo> reviews = reviewPage.getContent().stream()
+                .map(ReviewConverter::toMyReviewInfo)
+                .toList();
+
+        return ReviewResDTO.MyReviewList.builder()
+                .reviews(reviews)
+                .build();
+    }
 }

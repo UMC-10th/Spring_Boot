@@ -49,25 +49,11 @@ public class ReviewController {
     // 8. 내가 작성한 리뷰 조회
     @GetMapping("/members/me/review")
     public ApiResponse<ReviewResDTO.MyReviewList> getMyReviews(
+            @RequestParam Long memberId,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size
     ) {
-        // 6주차에서 reviewService.getMyReviews(page, size)로 교체
-        List<ReviewResDTO.MyReviewInfo> reviews = List.of(
-                ReviewResDTO.MyReviewInfo.builder()
-                        .reviewId(55L)
-                        .storeId(3L)
-                        .storeName("현안국밥")
-                        .starRate(new BigDecimal("4.5"))
-                        .content("음식이 맛있고 직원분이 친절했어요.")
-                        .createdAt(LocalDateTime.now())
-                        .build()
-        );
-
-        ReviewResDTO.MyReviewList result = ReviewResDTO.MyReviewList.builder()
-                .reviews(reviews)
-                .build();
-
+        ReviewResDTO.MyReviewList result = reviewService.getMyReviews(memberId, page, size);
         return ApiResponse.onSuccess(ReviewSuccessCode.GET_MY_REVIEWS, result);
     }
 }
