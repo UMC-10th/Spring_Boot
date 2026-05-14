@@ -5,6 +5,7 @@ import com.example.umc10th.domain.mission.entity.Store;
 import com.example.umc10th.domain.review.dto.ReviewReqDTO;
 import com.example.umc10th.domain.review.dto.ReviewResDTO;
 import com.example.umc10th.domain.review.entity.Review;
+import com.example.umc10th.global.dto.PageInfoDTO;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -52,8 +53,16 @@ public class ReviewConverter {
                 .map(ReviewConverter::toMyReviewInfo)
                 .toList();
 
+        PageInfoDTO pageInfo = PageInfoDTO.builder()
+                .page(reviewPage.getNumber())
+                .size(reviewPage.getSize())
+                .totalElements(reviewPage.getTotalElements())
+                .totalPages(reviewPage.getTotalPages())
+                .build();
+
         return ReviewResDTO.MyReviewList.builder()
                 .reviews(reviews)
+                .pageInfo(pageInfo)
                 .build();
     }
 }

@@ -3,6 +3,7 @@ package com.example.umc10th.domain.member.converter;
 import com.example.umc10th.domain.member.dto.MemberResDTO;
 import com.example.umc10th.domain.member.entity.Member;
 import com.example.umc10th.domain.mission.entity.mapping.MemberMission;
+import com.example.umc10th.global.dto.PageInfoDTO;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -64,7 +65,7 @@ public class MemberConverter {
                 .toList();
 
         // 2. Page에서 페이징 정보 꺼내서 PageInfo DTO 생성
-        MemberResDTO.PageInfo pageInfo = MemberResDTO.PageInfo.builder()
+        PageInfoDTO pageInfo = PageInfoDTO.builder()
                 .page(missionPage.getNumber())
                 .size(missionPage.getSize())
                 .totalElements(missionPage.getTotalElements())

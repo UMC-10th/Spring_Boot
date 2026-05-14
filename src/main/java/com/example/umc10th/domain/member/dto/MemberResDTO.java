@@ -1,5 +1,6 @@
 package com.example.umc10th.domain.member.dto;
 
+import com.example.umc10th.global.dto.PageInfoDTO;
 import lombok.Builder;
 
 import java.time.LocalDate;
@@ -44,22 +45,13 @@ public class MemberResDTO {
             LocalDate deadline
     ) {}
 
-    // 페이지 정보
-    @Builder
-    public record PageInfo(
-            Integer page,
-            Integer size,
-            Long totalElements,
-            Integer totalPages
-    ) {}
-
     // 홈 화면 응답 (최종)
     @Builder
     public record Home(
             HomeMember member,
             MissionSummary missionSummary,
             List<ReceivedMission> receivedMissions,
-            PageInfo pageInfo
+            PageInfoDTO pageInfo
     ) {}
 
     // 마이페이지 응답

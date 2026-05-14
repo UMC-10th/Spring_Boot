@@ -2,6 +2,7 @@ package com.example.umc10th.domain.mission.converter;
 
 import com.example.umc10th.domain.mission.dto.MissionResDTO;
 import com.example.umc10th.domain.mission.entity.mapping.MemberMission;
+import com.example.umc10th.global.dto.PageInfoDTO;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -24,8 +25,8 @@ public class MissionConverter {
     }
 
     // 페이지 정보
-    public static MissionResDTO.PageInfo toPageInfo(Page<MemberMission> page) {
-        return MissionResDTO.PageInfo.builder()
+    public static PageInfoDTO toPageInfo(Page<MemberMission> page) {
+        return PageInfoDTO.builder()
                 .page(page.getNumber())
                 .size(page.getSize())
                 .totalElements(page.getTotalElements())

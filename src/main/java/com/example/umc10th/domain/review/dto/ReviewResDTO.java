@@ -1,5 +1,6 @@
 package com.example.umc10th.domain.review.dto;
 
+import com.example.umc10th.global.dto.PageInfoDTO;
 import lombok.Builder;
 
 import java.math.BigDecimal;
@@ -43,6 +44,7 @@ public class ReviewResDTO {
     // 내가 작성한 리뷰 목록
     @Builder
     public record MyReviewList(
-            List<MyReviewInfo> reviews
+            List<MyReviewInfo> reviews,
+            PageInfoDTO pageInfo
     ) {}
 }

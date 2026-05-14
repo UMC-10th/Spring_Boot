@@ -1,5 +1,6 @@
 package com.example.umc10th.domain.mission.dto;
 
+import com.example.umc10th.global.dto.PageInfoDTO;
 import lombok.Builder;
 
 import java.time.LocalDate;
@@ -22,20 +23,11 @@ public class MissionResDTO {
             LocalDateTime completedAt
     ) {}
 
-    // 페이지 정보
-    @Builder
-    public record PageInfo(
-            Integer page,
-            Integer size,
-            Long totalElements,
-            Integer totalPages
-    ) {}
-
     // 미션 목록 응답
     @Builder
     public record MissionList(
             List<MissionInfo> missions,
-            PageInfo pageInfo
+            PageInfoDTO pageInfo
     ) {}
 
     // 미션 성공 응답
