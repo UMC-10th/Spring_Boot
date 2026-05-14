@@ -64,19 +64,11 @@ public class MemberConverter {
                 .map(MemberConverter::toReceivedMission)
                 .toList();
 
-        // 2. Page에서 페이징 정보 꺼내서 PageInfo DTO 생성
-        PageInfoDTO pageInfo = PageInfoDTO.builder()
-                .page(missionPage.getNumber())
-                .size(missionPage.getSize())
-                .totalElements(missionPage.getTotalElements())
-                .totalPages(missionPage.getTotalPages())
-                .build();
-
         return MemberResDTO.Home.builder()
                 .member(toHomeMember(member)) // 회원 정보 변환
                 .missionSummary(toMissionSummary(received, completed, inProgress)) // 미션 요약 변환
                 .receivedMissions(missionList) // 받은 미션 리스트 설정
-                .pageInfo(pageInfo)
+                .pageInfo(PageInfoDTO.from(missionPage)) // 페이지 정보 변환
                 .build();
     }
 }

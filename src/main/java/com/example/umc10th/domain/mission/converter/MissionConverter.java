@@ -24,16 +24,6 @@ public class MissionConverter {
                 .build();
     }
 
-    // 페이지 정보
-    public static PageInfoDTO toPageInfo(Page<MemberMission> page) {
-        return PageInfoDTO.builder()
-                .page(page.getNumber())
-                .size(page.getSize())
-                .totalElements(page.getTotalElements())
-                .totalPages(page.getTotalPages())
-                .build();
-    }
-
     // 전체 응답(미션 목록 응답) (페이징 포함!)
     public static MissionResDTO.MissionList toMissionList(Page<MemberMission> page) {
         List<MissionResDTO.MissionInfo> missions = page.getContent().stream()
@@ -42,7 +32,7 @@ public class MissionConverter {
 
         return MissionResDTO.MissionList.builder()
                 .missions(missions)
-                .pageInfo(toPageInfo(page))
+                .pageInfo(PageInfoDTO.from(page))
                 .build();
     }
 }

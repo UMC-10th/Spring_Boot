@@ -53,16 +53,9 @@ public class ReviewConverter {
                 .map(ReviewConverter::toMyReviewInfo)
                 .toList();
 
-        PageInfoDTO pageInfo = PageInfoDTO.builder()
-                .page(reviewPage.getNumber())
-                .size(reviewPage.getSize())
-                .totalElements(reviewPage.getTotalElements())
-                .totalPages(reviewPage.getTotalPages())
-                .build();
-
         return ReviewResDTO.MyReviewList.builder()
                 .reviews(reviews)
-                .pageInfo(pageInfo)
+                .pageInfo(PageInfoDTO.from(reviewPage))
                 .build();
     }
 }
