@@ -11,7 +11,7 @@ public class MemberResDTO {
     @Builder
     @Getter
     public static class JoinResult {
-        private Long userId;
+        private Long memberId;
         private LocalDateTime createdAt;
     }
 
@@ -25,7 +25,7 @@ public class MemberResDTO {
     @Builder
     @Getter
     public static class MyPage {
-        private Long userId;
+        private Long memberId;
         private String name;
         private String email;
         private Integer point;
@@ -39,6 +39,8 @@ public class MemberResDTO {
         private String title;
         private Integer pointReward;
         private String missionStatus;
+        private String restaurantName;
+        private String description;
     }
 
     @Builder
