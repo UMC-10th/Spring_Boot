@@ -35,18 +35,6 @@ public class MemberConverter {
                 .build();
     }
 
-    public static MemberResDTO.MissionList toMissionList(Page<MissionParticipation> page) {
-        List<MemberResDTO.MissionListItem> items = page.getContent().stream()
-                .map(MemberConverter::toMissionListItem)
-                .toList();
-
-        return MemberResDTO.MissionList.builder()
-                .missions(items)
-                .totalCount(page.getTotalElements())
-                .currentPage(page.getNumber() + 1) // 페이지 번호는 0부터 시작하므로 1을 더해줌
-                .build();
-    }
-
 //    public static Member toMember(MemberReqDTO.Join joinDTO) {
 //        return Member.builder()
 //                .name(joinDTO.name())
