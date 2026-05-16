@@ -15,9 +15,9 @@ public class MissionService {
 
 	private final MissionRepository missionRepository;
 
-	public MissionResDTO.MissionList missions(String auth, String queryParameter) {
-		Long storeId = Long.parseLong(queryParameter);
-		List<Mission> missions = missionRepository.findAllByStore_Id(storeId);
+	public MissionResDTO.MissionList missions(String auth, String storeId) {
+		Long id = Long.parseLong(storeId);
+		List<Mission> missions = missionRepository.findAllByStore_Id(id);
 
 		MissionResDTO.Mission[] missionResponses = missions.stream()
 				.map(mission -> toMissionResponse(mission.getPoint()))

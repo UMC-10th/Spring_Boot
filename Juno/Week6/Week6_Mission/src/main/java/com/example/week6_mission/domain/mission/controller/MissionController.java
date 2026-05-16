@@ -19,9 +19,9 @@ public class MissionController {
     @GetMapping("")
     public ApiResponse<MissionResDTO.MissionList> missions(
             @RequestHeader("Authorization") String auth,
-            @RequestParam String queryParameter
+            @RequestParam String storeId
     ){
         BaseSuccessCode code = GeneralSuccessCode.OK;
-        return ApiResponse.onSuccess(code, missionService.missions(auth, queryParameter));
+        return ApiResponse.onSuccess(code, missionService.missions(auth, storeId));
     }
 }
