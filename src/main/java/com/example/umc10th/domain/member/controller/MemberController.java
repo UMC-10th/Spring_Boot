@@ -8,7 +8,6 @@ import com.example.umc10th.domain.member.service.MemberService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
 import com.example.umc10th.global.apiPayload.code.BaseSuccessCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,30 +18,30 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/users/me")
-    public ResponseEntity<ApiResponse<MemberResDTO.GetInfo>> getInfo(
+    public ApiResponse<MemberResDTO.GetInfo> getInfo(
             @RequestBody MemberReqDTO.GetInfo dto
     ) {
         BaseSuccessCode code = MemberSuccessCode.OK;
-        return ApiResponse.of(code, memberService.getInfo(dto));
+        return ApiResponse.success(code, memberService.getInfo(dto));
     }
 
     // 마이페이지
     // TODO: Security 적용 후 매개변수 변경
     @GetMapping("/myPage")
-    public ResponseEntity<ApiResponse<MemberResDTO.GetInfo>> getMyPage(
+    public ApiResponse<MemberResDTO.GetInfo> getMyPage(
             @RequestParam Long memberId
     ) {
         BaseSuccessCode code = MemberSuccessCode.MY_PAGE_OK;
-        return ApiResponse.of(code, memberService.getMyPage(memberId));
+        return ApiResponse.success(code, memberService.getMyPage(memberId));
     }
 
     // 회원가입
     @PostMapping("/auth/signup")
-    public ResponseEntity<ApiResponse<MemberResDTO.SignUp>> signUp(
+    public ApiResponse<MemberResDTO.SignUp> signUp(
             @RequestBody MemberReqDTO.SignUp dto
     ) {
         BaseSuccessCode code = MemberSuccessCode.SIGNUP_OK;
-        return ApiResponse.of(code, memberService.signUp(dto));
+        return ApiResponse.success(code, memberService.signUp(dto));
     }
 }
 
