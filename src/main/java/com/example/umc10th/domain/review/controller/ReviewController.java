@@ -26,14 +26,7 @@ public class ReviewController {
     public ApiResponse<ReviewResDTO.StoreInfo> getStoreInfo(
             @PathVariable Long storeId
     ) {
-        // TODO: 6주차에서 reviewService.getStoreInfo(storeId)로 교체
-        ReviewResDTO.StoreInfo result = ReviewResDTO.StoreInfo.builder()
-                .storeId(storeId)
-                .name("신승호라멘")
-                .foodType("KOREAN")
-                .address("서울 중구 ...")
-                .build();
-
+        ReviewResDTO.StoreInfo result = reviewService.getStoreInfo(storeId);
         return ApiResponse.onSuccess(ReviewSuccessCode.GET_STORE_INFO, result);
     }
 

@@ -33,6 +33,13 @@ public class ReviewService {
     private final StoreRepository storeRepository;
     private final MemberMissionRepository memberMissionRepository;
 
+    // 리뷰 작성 화면 진입용 가게 정보 조회
+    public ReviewResDTO.StoreInfo getStoreInfo(Long storeId) {
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new ReviewException(ReviewErrorCode.STORE_NOT_FOUND));
+        return ReviewConverter.toStoreInfo(store);
+    }
+
     // 리뷰 작성
     @Transactional
     public ReviewResDTO.CreateReview createReview(Long storeId, ReviewReqDTO.CreateReview request) {

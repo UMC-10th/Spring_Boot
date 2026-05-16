@@ -14,6 +14,16 @@ import java.util.List;
 
 public class ReviewConverter {
 
+    // 가게 정보 변환
+    public static ReviewResDTO.StoreInfo toStoreInfo(Store store) {
+        return ReviewResDTO.StoreInfo.builder()
+                .storeId(store.getId())
+                .name(store.getName())
+                .foodType(store.getFoodType())
+                .address(store.getDetailAddress())
+                .build();
+    }
+
     // 요청 -> 엔티티
     public static Review toReview(ReviewReqDTO.CreateReview request, Member member, Store store) {
         return Review.builder()
