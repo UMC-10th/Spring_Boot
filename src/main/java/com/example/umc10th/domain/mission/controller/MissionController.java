@@ -2,9 +2,9 @@ package com.example.umc10th.domain.mission.controller;
 
 import com.example.umc10th.domain.mission.dto.MissionReqDTO;
 import com.example.umc10th.domain.mission.dto.MissionResDTO;
+import com.example.umc10th.domain.mission.exception.code.MissionSuccessCode;
 import com.example.umc10th.domain.mission.service.MissionService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
-import com.example.umc10th.global.apiPayload.code.GeneralSuccessCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +20,7 @@ public class MissionController {
             @RequestBody MissionReqDTO.CreateMissionDTO request
     ) {
         return ApiResponse.onSuccess(
-                GeneralSuccessCode.OK,
+                MissionSuccessCode.MISSION_CREATED,
                 missionService.createMission(request)
         );
     }
@@ -30,7 +30,7 @@ public class MissionController {
             @PathVariable Long missionId
     ) {
         return ApiResponse.onSuccess(
-                GeneralSuccessCode.OK,
+                MissionSuccessCode.MISSION_FOUND,
                 missionService.getMission(missionId)
         );
     }
@@ -41,7 +41,7 @@ public class MissionController {
             @RequestParam(defaultValue = "0") Integer page
     ) {
         return ApiResponse.onSuccess(
-                GeneralSuccessCode.OK,
+                MissionSuccessCode.HOME_MISSION_FOUND,
                 missionService.getHomeMissions(locationId, page)
         );
     }

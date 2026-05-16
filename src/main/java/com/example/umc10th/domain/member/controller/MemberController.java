@@ -2,9 +2,9 @@ package com.example.umc10th.domain.member.controller;
 
 import com.example.umc10th.domain.member.dto.MemberReqDTO;
 import com.example.umc10th.domain.member.dto.MemberResDTO;
+import com.example.umc10th.domain.member.exception.code.MemberSuccessCode;
 import com.example.umc10th.domain.member.service.MemberService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
-import com.example.umc10th.global.apiPayload.code.GeneralSuccessCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +20,7 @@ public class MemberController {
             @RequestBody MemberReqDTO.JoinDTO request
     ) {
         return ApiResponse.onSuccess(
-                GeneralSuccessCode.OK,
+                MemberSuccessCode.MEMBER_CREATED,
                 memberService.joinMember(request)
         );
     }
@@ -30,8 +30,18 @@ public class MemberController {
             @PathVariable Long memberId
     ) {
         return ApiResponse.onSuccess(
-                GeneralSuccessCode.OK,
+                MemberSuccessCode.MEMBER_FOUND,
                 memberService.getMember(memberId)
+        );
+    }
+
+    @GetMapping("/{memberId}/my-page")
+    public ApiResponse<MemberResDTO.MyPageDTO> getMyPage(
+            @PathVariable Long memberId
+    ) {
+        return ApiResponse.onSuccess(
+                MemberSuccessCode.MY_PAGE_FOUND,
+                memberService.getMyPage(memberId)
         );
     }
 
@@ -40,7 +50,7 @@ public class MemberController {
             @PathVariable Long memberId
     ) {
         return ApiResponse.onSuccess(
-                GeneralSuccessCode.OK,
+                MemberSuccessCode.MEMBER_DELETED,
                 memberService.deleteMember(memberId)
         );
     }
