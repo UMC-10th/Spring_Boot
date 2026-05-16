@@ -6,7 +6,34 @@ import com.example.umc10th.domain.review.dto.ReviewResDTO;
 import com.example.umc10th.domain.review.entity.Review;
 import com.example.umc10th.domain.store.entity.Store;
 
+import java.util.List;
+
 public class ReviewConverter {
+
+    public static ReviewResDTO.MyReviewDTO toMyReview(Review review) {
+        return ReviewResDTO.MyReviewDTO.builder()
+                .reviewId(review.getId())
+                .storeId(review.getStore().getId())
+                .storeName(review.getStore().getName())
+                .content(review.getContent())
+                .rating(review.getRating())
+                .createdAt(review.getCreatedAt())
+                .build();
+    }
+
+    public static <T> ReviewResDTO.CursorPagination<T> toCursorPagination(
+            List<T> data,
+            Boolean hasNext,
+            String nextCursor,
+            Integer pageSize
+    ) {
+        return ReviewResDTO.CursorPagination.<T>builder()
+                .data(data)
+                .hasNext(hasNext)
+                .nextCursor(nextCursor)
+                .pageSize(pageSize)
+                .build();
+    }
 
     public static Review toReview(
             ReviewReqDTO.CreateReviewDTO request,
