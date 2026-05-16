@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
+
 public interface ReviewRepository extends JpaRepository <Review, Long> {
 
     // 내가 작성한 리뷰 목록 (페이징 + Fetch Join)
@@ -59,7 +61,7 @@ public interface ReviewRepository extends JpaRepository <Review, Long> {
             "ORDER BY r.star DESC, r.id DESC")
     Slice<Review> findNextSliceByStarDesc(
             @Param("memberId") Long memberId,
-            @Param("cursorStar") Double cursorStar,
+            @Param("cursorStar") BigDecimal cursorStar,
             @Param("cursorId") Long cursorId,
             Pageable pageable
     );

@@ -18,8 +18,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
 
 @Service
 @RequiredArgsConstructor
@@ -55,5 +58,52 @@ public class ReviewService {
         Pageable pageable = PageRequest.of(page, size);
         Page<Review> reviewPage = reviewRepository.findByMemberId(memberId, pageable);
         return ReviewConverter.toMyReviewList(reviewPage);
+    }
+
+    // 커서 기반 리뷰 조회 (ID 순 / 별점 순)
+    public ReviewResDTO.MyReviewSliceList getMyReviewsByCursor(
+            Long memberId, String sort, String cursor, Integer size
+    ) {
+        Pageable pageable = PageRequest.of(0, size);
+
+        boolean isFirstPage = (cursor == null || cursor.isBlank() || "-1".equals(cursor));
+        Slice<Review> reviewSlice;
+
+        if ("star".equals(sort)) {
+            // 별점 순
+            if (isFirstPage) {
+                reviewSlice = reviewRepository.findFirstSliceByStarDesc(memberId, pageable);
+            } else {
+                // cursor 형식: "별점_ID" (ex) 4.5_16)
+                String[] parts = cursor.split("_");
+                BigDecimal cursorStar = new BigDecimal(parts[0]);
+                Long cursorId = Long.parseLong(parts[1]);
+                reviewSlice = reviewRepository.findNextSliceByStarDesc(memberId, cursorStar, cursorId, pageable);
+            }
+        } else {
+            // ID 순 (기본)
+            if (isFirstPage) {
+                reviewSlice = reviewRepository.findFirstSliceByMemberId(memberId, pageable);
+            } else {
+                Long cursorId = Long.parseLong(cursor);
+                reviewSlice = reviewRepository.findNextSliceByMemberId(memberId, cursorId, pageable);
+            }
+        }
+
+        String nextCursor = calculateNextCursor(reviewSlice, sort);
+        return ReviewConverter.toMyReviewSliceList(reviewSlice, nextCursor);
+    }
+
+    // 다음 커서 만들기 (마지막 아이템 기준)
+    private String calculateNextCursor(Slice<Review> slice, String sort) {
+        if (!slice.hasNext() || slice.getContent().isEmpty()) {
+            return null; // 다음 페이지 없음
+        }
+        Review last = slice.getContent().get(slice.getContent().size() - 1);
+
+        if (sort.equalsIgnoreCase("star")) {
+            return last.getStar() + "_" + last.getId(); // 별점_아이디
+        }
+        return String.valueOf(last.getId()); // 아이디만
     }
 }
