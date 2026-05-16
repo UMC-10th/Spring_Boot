@@ -1,0 +1,65 @@
+package com.example.umc10th.domain.member.service;
+
+import com.example.umc10th.domain.member.converter.MemberConverter;
+import com.example.umc10th.domain.member.dto.MemberReqDTO;
+import com.example.umc10th.domain.member.dto.MemberResDTO;
+import com.example.umc10th.domain.member.entity.Member;
+import com.example.umc10th.domain.member.exception.MemberException;
+import com.example.umc10th.domain.member.exception.code.MemberErrorCode;
+import com.example.umc10th.domain.member.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class MemberService {
+
+    private final MemberRepository memberRepository;
+
+    @Transactional
+    public MemberResDTO.JoinResultDTO joinMember(MemberReqDTO.JoinDTO request) {
+
+        Member member = MemberConverter.toMember(request);
+
+        Member savedMember = memberRepository.save(member);
+
+        return MemberConverter.toJoinResultDTO(savedMember);
+    }
+
+    public MemberResDTO.MemberInfoDTO getMember(Long memberId) {
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+
+        return MemberConverter.toMemberInfoDTO(member);
+    }
+
+    public MemberResDTO.MyPageDTO getMyPage(Long memberId) {
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+
+        Long reviewCount = memberRepository.countReviewByMemberId(memberId);
+
+        return MemberResDTO.MyPageDTO.builder()
+                .memberId(member.getId())
+                .nickname(member.getNickname())
+                .email(member.getEmail())
+                .point(member.getPoint())
+                .reviewCount(reviewCount)
+                .build();
+    }
+
+    @Transactional
+    public String deleteMember(Long memberId) {
+
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+
+        memberRepository.delete(member);
+
+        return "OK";
+    }
+}
