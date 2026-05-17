@@ -62,4 +62,23 @@ public class MissionConverter {
                 .isLast(page.isLast())
                 .build();
     }
+
+    public static MissinoResDTO.StoreMissionRes toStoreMissionRes(Mission mission) {
+        return MissinoResDTO.StoreMissionRes.builder()
+                .missionId(mission.getId())
+                .point(mission.getReward())
+                .conditional(mission.getMissionSpec())
+                .build();
+    }
+
+    public static MissinoResDTO.StoreMissionListRes toStoreMissionListRes(List<Mission> missions) {
+        List<MissinoResDTO.StoreMissionRes> list = missions.stream()
+                .map(MissionConverter::toStoreMissionRes)
+                .collect(Collectors.toList());
+
+        return MissinoResDTO.StoreMissionListRes.builder()
+                .missionList(list)
+                .listSize(list.size())
+                .build();
+    }
 }

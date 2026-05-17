@@ -7,11 +7,14 @@ import com.example.umc10thtest.domain.member.entity.Member;
 import com.example.umc10thtest.domain.member.exception.code.MemberSuccessCode;
 import com.example.umc10thtest.domain.member.service.MemberService;
 import com.example.umc10thtest.domain.mission.converter.MissionConverter;
+import com.example.umc10thtest.domain.mission.dto.MissionReqDTO;
 import com.example.umc10thtest.domain.mission.entity.mapping.MemberMission;
 import com.example.umc10thtest.domain.mission.enums.MissionStatus;
+import com.example.umc10thtest.domain.mission.exception.code.MissionSuccessCode;
 import com.example.umc10thtest.global.apiPayload.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -55,5 +58,18 @@ public class MemberController {
     ) {
         Page<MemberMission> missionPage = memberService.getMyMissions(memberId, status, page);
         return ApiResponse.onSuccess(MemberSuccessCode.GET_MY_MISSIONS, MissionConverter.toMyMissionPreviewListRes(missionPage));
+    }
+
+    @GetMapping("/missions/progressing")
+    @Operation(summary = "내가 진행중인 미션 조회", description = "사용자 ID를 Request Body로 받아 진행중인 미션 목록을 오프셋 기반 페이지네이션으로 조회합니다.")
+    public ApiResponse<MemberResDTO.MissionPreviewListRes> getProgressingMissions(
+            @RequestBody @Valid MissionReqDTO.ProgressingMissionsReq request
+    ) {
+        Page<MemberMission> missionPage = memberService.getMyMissions(
+                request.getMemberId(),
+                MissionStatus.CHALLENGING,
+                request.getPage() != null ? request.getPage() : 0
+        );
+        return ApiResponse.onSuccess(MissionSuccessCode.GET_MY_PROGRESSING_MISSIONS, MissionConverter.toMyMissionPreviewListRes(missionPage));
     }
 }
