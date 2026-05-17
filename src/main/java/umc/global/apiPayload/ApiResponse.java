@@ -33,4 +33,9 @@ public class ApiResponse<T> {
     public static <T> ApiResponse<T> onFailure(BaseErrorCode code, T result) {
         return new ApiResponse<>(false, code.getCode(), code.getMessage(), result);
     }
+
+    // 실패 응답 (데이터를 포함하는 경우)
+    public static <T> ApiResponse<T> onFailure(String code, String message, T data) {
+        return new ApiResponse<>(false, code, message, data);
+    }
 }
