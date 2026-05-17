@@ -9,12 +9,14 @@ public class MissionReqDTO {
 
     // 홈 화면 조회 (Security 미적용)
     public record GetHome(
+            @NotNull(message = "회원 아이디를 입력해주세요")
             Long memberId,
             Long locationId
     ) {}
 
     // 내 미션 목록 조회
     public record GetMyMissions(
+            @NotNull(message = "회원 아이디를 입력해주세요.")
             Long memberId,
             Boolean isComplete
     ) {}

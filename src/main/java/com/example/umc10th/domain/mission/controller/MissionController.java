@@ -38,7 +38,7 @@ public class MissionController {
     // TODO: Security 적용 후 매개변수 변경
     @PostMapping("/my/missions")
     public ApiResponse<MissionResDTO.GetMyMissions> getMyMissions(
-            @RequestBody MissionReqDTO.GetMyMissions req,
+            @RequestBody @Valid MissionReqDTO.GetMyMissions req,
             Pageable pageable
     ) {
         BaseSuccessCode code = MissionSuccessCode.MY_MISSIONS_OK;

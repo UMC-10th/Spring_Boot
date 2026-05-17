@@ -22,7 +22,7 @@ public class ReviewController {
     @PostMapping("/stores/{storeId}/reviews")
     public ApiResponse<ReviewResDTO.CreateReview> createReview(
             @PathVariable Long storeId,
-            @RequestBody ReviewReqDTO.CreateReview dto
+            @RequestBody @Valid ReviewReqDTO.CreateReview dto
     ) {
         BaseSuccessCode code = ReviewSuccessCode.REVIEW_CREATED;
         return ApiResponse.success(code, reviewService.createReview(storeId, dto));
