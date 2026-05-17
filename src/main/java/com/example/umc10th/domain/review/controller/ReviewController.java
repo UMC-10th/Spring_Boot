@@ -37,6 +37,7 @@ public class ReviewController {
     ){
         BaseSuccessCode code = ReviewSuccessCode.OK;
         return ApiResponse.success(code, reviewService.getMyReviews(req.memberId(), pageSize, cursor, query));
+
     }
 }
 
