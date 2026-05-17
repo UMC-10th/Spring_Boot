@@ -16,20 +16,22 @@ public class MissionController {
 
     private final MissionService missionService;
 
-    // 화면 2: 내 미션 목록 (진행중/완료, 페이징)
+    // 미션 1: 내가 진행 중인 미션 조회 (오프셋 기반)
+    // GET /api/missions/my?userId=1&status=IN_PROGRESS&pageSize=10&pageNumber=0
     @GetMapping("/my")
-    public ApiResponse<Page<MissionResDTO.MissionItemDTO>> getMyMissions(
+    public ApiResponse<MissionResDTO.OffsetPagination<MissionResDTO.GetMission>> getMyMissions(
             @RequestParam Long userId,
             @RequestParam(defaultValue = "IN_PROGRESS") String status,
-            @RequestParam(defaultValue = "0") int page
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(defaultValue = "0") Integer pageNumber
     ) {
         return ApiResponse.onSuccess(GeneralSuccessCode.OK,
-                missionService.getMyMissions(userId, status, page));
+                missionService.getMyMissions(userId, status, pageSize, pageNumber));
     }
 
-    // 화면 4: 지역별 도전 가능 미션 (페이징)
+    // 기존: 지역별 도전 가능 미션
     @GetMapping
-    public ApiResponse<Page<MissionResDTO.MissionItemDTO>> getAvailableMissions(
+    public ApiResponse<Page<MissionResDTO.GetMission>> getAvailableMissions(
             @RequestParam String address,
             @RequestParam Long userId,
             @RequestParam(defaultValue = "0") int page
@@ -38,7 +40,7 @@ public class MissionController {
                 missionService.getAvailableMissions(address, userId, page));
     }
 
-    // 미션 상태 변경
+    // 기존: 미션 상태 변경
     @PatchMapping("/{missionId}/status")
     public ApiResponse<Void> updateMissionStatus(
             @PathVariable Long missionId,
