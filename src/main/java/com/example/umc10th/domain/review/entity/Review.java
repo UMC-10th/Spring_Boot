@@ -1,12 +1,14 @@
 package com.example.umc10th.domain.review.entity;
 
 import com.example.umc10th.domain.member.entity.Member;
-import com.example.umc10th.domain.store.entity.Store;
+import com.example.umc10th.domain.mission.entity.Store;
+import com.example.umc10th.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -14,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Table(name = "review")
-public class Review {
+public class Review extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,9 +25,6 @@ public class Review {
 
     @Column(name = "content", nullable = false, columnDefinition = "text")
     private String content;
-
-    @Column(name = "created_at", nullable = false)
-    private LocalDateTime createdAt;
 
     @Column(name = "star", nullable = false)
     private BigDecimal star;
@@ -41,4 +40,8 @@ public class Review {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reply_id", nullable = true)
     private Reply reply;
+
+    @Builder.Default
+    @OneToMany(mappedBy = "review", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    private List<ReviewPhoto> reviewPhotos = new ArrayList<>();
 }

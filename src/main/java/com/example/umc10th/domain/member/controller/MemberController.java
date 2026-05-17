@@ -1,6 +1,7 @@
 package com.example.umc10th.domain.member.controller;
 
 import com.example.umc10th.domain.member.dto.MemberReqDTO;
+import jakarta.validation.Valid;
 import com.example.umc10th.domain.member.dto.MemberResDTO;
 import com.example.umc10th.domain.member.service.MemberService;
 import com.example.umc10th.domain.member.exception.code.MemberSuccessCode;
@@ -19,7 +20,7 @@ public class MemberController {
     // 1) 회원가입
     @PostMapping("/auth/signup")
     public ApiResponse<MemberResDTO.SignUp> signUp(
-            @RequestBody MemberReqDTO.SignUp dto
+            @RequestBody @Valid MemberReqDTO.SignUp dto
     ) {
         return ApiResponse.onSuccess(
                 MemberSuccessCode.MEMBER_SIGNUP_SUCCESS,

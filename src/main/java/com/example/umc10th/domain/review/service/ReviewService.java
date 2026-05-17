@@ -1,18 +1,23 @@
 package com.example.umc10th.domain.review.service;
 
 import com.example.umc10th.domain.member.entity.Member;
+import com.example.umc10th.domain.member.exception.MemberException;
 import com.example.umc10th.domain.member.exception.code.MemberErrorCode;
 import com.example.umc10th.domain.member.repository.MemberRepository;
+import com.example.umc10th.domain.mission.entity.mapping.MemberMission;
+import com.example.umc10th.domain.mission.exception.MissionException;
+import com.example.umc10th.domain.mission.exception.StoreException;
+import com.example.umc10th.domain.mission.exception.code.MissionErrorCode;
+import com.example.umc10th.domain.mission.repository.MemberMissionRepository;
 import com.example.umc10th.domain.review.converter.ReviewConverter;
 import com.example.umc10th.domain.review.dto.ReviewReqDTO;
 import com.example.umc10th.domain.review.dto.ReviewResDTO;
 import com.example.umc10th.domain.review.entity.Review;
-import com.example.umc10th.domain.review.exception.code.ReviewErrorCode;
+import com.example.umc10th.domain.review.entity.ReviewPhoto;
 import com.example.umc10th.domain.review.repository.ReviewRepository;
-import com.example.umc10th.domain.store.entity.Store;
-import com.example.umc10th.domain.store.exception.code.StoreErrorCode;
-import com.example.umc10th.domain.store.repository.StoreRepository;
-import com.example.umc10th.global.apiPayload.exception.ProjectException;
+import com.example.umc10th.domain.mission.entity.Store;
+import com.example.umc10th.domain.mission.exception.code.StoreErrorCode;
+import com.example.umc10th.domain.mission.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,7 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -32,10 +37,11 @@ public class ReviewService {
 	private final ReviewRepository reviewRepository;
 	private final StoreRepository storeRepository;
 	private final MemberRepository memberRepository;
+	private final MemberMissionRepository memberMissionRepository;
 
 	public ReviewResDTO.StoreInfo getStoreInfo(Long storeId) {
 		Store store = storeRepository.findById(storeId)
-				.orElseThrow(() -> new ProjectException(StoreErrorCode.STORE_NOT_FOUND));
+				.orElseThrow(() -> new StoreException(StoreErrorCode.STORE_NOT_FOUND));
 
 		return ReviewConverter.toStoreInfoResponse(store);
 	}
@@ -43,22 +49,36 @@ public class ReviewService {
 	@Transactional
 	public ReviewResDTO.CreateReview createReview(Long storeId, ReviewReqDTO.CreateReview request) {
 		Store store = storeRepository.findById(storeId)
-				.orElseThrow(() -> new ProjectException(StoreErrorCode.STORE_NOT_FOUND));
+				.orElseThrow(() -> new StoreException(StoreErrorCode.STORE_NOT_FOUND));
 
 		Member member = memberRepository.findById(CURRENT_MEMBER_ID)
-				.orElseThrow(() -> new ProjectException(MemberErrorCode.MEMBER_NOT_FOUND));
+				.orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+
+		if (request.memberMissionId() != null) {
+			memberMissionRepository.findById(request.memberMissionId())
+					.orElseThrow(() -> new MissionException(MissionErrorCode.MISSION_NOT_FOUND));
+		}
 
 		Review review = Review.builder()
 				.store(store)
 				.member(member)
 				.star(BigDecimal.valueOf(request.starRate()))
 				.content(request.content())
-				.createdAt(LocalDateTime.now())
 				.build();
+
+		if (request.photoUrls() != null) {
+			request.photoUrls().forEach(url ->
+					review.getReviewPhotos().add(ReviewPhoto.builder()
+							.review(review)
+							.photoUrl(url)
+							.build())
+			);
+		}
 
 		Review savedReview = reviewRepository.save(review);
 
-		return ReviewConverter.toCreateReviewResponse(savedReview);
+		List<String> savedUrls = request.photoUrls() != null ? request.photoUrls() : List.of();
+		return ReviewConverter.toCreateReviewResponse(savedReview, savedUrls);
 	}
 
 	public ReviewResDTO.MyReviews getMyReviews(ReviewReqDTO.MyReviewRequest request) {

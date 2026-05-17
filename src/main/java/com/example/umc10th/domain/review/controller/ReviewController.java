@@ -1,6 +1,7 @@
 package com.example.umc10th.domain.review.controller;
 
 import com.example.umc10th.domain.review.dto.ReviewReqDTO;
+import jakarta.validation.Valid;
 import com.example.umc10th.domain.review.dto.ReviewResDTO;
 import com.example.umc10th.domain.review.service.ReviewService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
@@ -21,6 +22,7 @@ public class ReviewController {
 
 	private final ReviewService reviewService;
 
+	// 특정 가게 정보 조회
 	@GetMapping("/stores/{storeId}")
 	public ApiResponse<ReviewResDTO.StoreInfo> getStoreInfo(
 			@PathVariable Long storeId
@@ -31,10 +33,11 @@ public class ReviewController {
 		);
 	}
 
+	// 특정 가게에 리뷰 작성
 	@PostMapping("/stores/{storeId}/reviews")
 	public ApiResponse<ReviewResDTO.CreateReview> createReview(
 			@PathVariable Long storeId,
-			@RequestBody ReviewReqDTO.CreateReview request
+			@RequestBody @Valid ReviewReqDTO.CreateReview request
 	) {
 		return ApiResponse.onSuccess(
 				GeneralSuccessCode.OK,
@@ -42,6 +45,7 @@ public class ReviewController {
 		);
 	}
 
+	// 내가 작성한 리뷰 목록 조회
 	@GetMapping("/members/me/review")
 	public ApiResponse<ReviewResDTO.MyReviews> getMyReviews(
 			@ModelAttribute ReviewReqDTO.MyReviewRequest request

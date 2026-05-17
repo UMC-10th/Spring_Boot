@@ -6,6 +6,7 @@ import java.util.List;
 
 public class MissionResDTO {
 
+	// 미션 목록
 	public record MissionSummary(
 			Long memberMissionId,
 			Long missionId,
@@ -19,6 +20,7 @@ public class MissionResDTO {
 	) {
 	}
 
+	// 페이지 정보
 	public record PageInfo(
 			Integer page,
 			Integer size,
@@ -27,12 +29,14 @@ public class MissionResDTO {
 	) {
 	}
 
+	// 미션 목록 응답
 	public record MissionList(
 			List<MissionSummary> missions,
 			PageInfo pageInfo
 	) {
 	}
 
+	// 미션 성공 응답
 	public record CompleteMission(
 			Long memberMissionId,
 			String status,
@@ -41,4 +45,17 @@ public class MissionResDTO {
 			LocalDateTime completedAt
 	) {
 	}
+
+	// 가게 내 미션 - 단건
+	public record GetMission(
+			Long missionId,
+			Integer point,
+			String condition
+	){}
+
+	// 가게 내 미션 목록 응답
+	public record StoreMissionList(
+			List<GetMission> missions,
+			PageInfo pageInfo
+	){}
 }
