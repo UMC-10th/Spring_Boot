@@ -1,6 +1,6 @@
 package com.example.umc10th.domain.member.dto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 public class MemberResDTO {
@@ -49,7 +49,7 @@ public class MemberResDTO {
             String condition,
             Integer rewardPoint,
             String status,
-            LocalDateTime deadline
+            LocalDate deadline
     ) {
     }
 
