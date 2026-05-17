@@ -3,7 +3,10 @@ package com.umc.umc10th.domain.user.service;
 import com.umc.umc10th.domain.mission.dto.response.MissionResponseDto;
 import com.umc.umc10th.domain.review.dto.response.ReviewResponseDto;
 import com.umc.umc10th.domain.review.entity.Review;
+import com.umc.umc10th.domain.review.enums.Stars;
 import com.umc.umc10th.domain.review.repository.ReviewRepository;
+import com.umc.umc10th.domain.user.converter.UserConverter;
+import com.umc.umc10th.domain.user.dto.request.UserRequestDto;
 import com.umc.umc10th.domain.user.dto.response.UserResponseDto;
 import com.umc.umc10th.domain.user.entity.User;
 import com.umc.umc10th.domain.user.entity.UserDoingMission;
@@ -13,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,5 +81,67 @@ public class UserService {
         return ReviewResponseDto.GetMyReviews.builder()
                 .reviews(items)
                 .build();
+    }
+
+    public MissionResponseDto.GetMissionsPaged getMissions(
+            Long locationId,
+            Integer pageSize,
+            Integer pageNumber,
+            UserRequestDto.GetMissionsRequest request
+    ) {
+
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
+
+        Page<UserDoingMission> page =
+                userDoingMissionRepository.findAllByUser_IdAndMission_Location_Id(
+                        request.userId(), locationId, pageRequest
+                );
+
+        return UserConverter.toGetMissionsPaged(page);
+    }
+
+    public ReviewResponseDto.GetMyReviewsPaged getMyReviews(
+            Long userId, Integer pageSize, String cursor, String query) {  // ← 파라미터 분리
+
+        PageRequest pageRequest = PageRequest.of(0, pageSize);
+        Slice<Review> slice;
+
+        if (!cursor.equals("-1")) {
+            String[] split = cursor.split(":");
+            switch (query.toUpperCase()) {
+                case "ID" -> {
+                    Long idCursor = Long.parseLong(split[1]);
+                    slice = reviewRepository.findReviewsByUser_IdAndIdLessThanOrderByIdDesc(
+                            userId, idCursor, pageRequest
+                    );
+                }
+                case "STARS" -> {
+                    Stars starsCursor = Stars.valueOf(split[0]);
+                    Long idCursor = Long.parseLong(split[1]);
+                    slice = reviewRepository.findReviewsByUser_IdOrderByStarsDesc(
+                            userId, starsCursor, idCursor, pageRequest
+                    );
+                }
+                default -> throw new IllegalArgumentException("유효하지 않은 정렬 기준입니다: " + query);
+            }
+        } else {
+            slice = switch (query.toUpperCase()) {
+                case "STARS" -> reviewRepository.findReviewsByUser_IdOrderByStarsDescIdDesc(
+                        userId, pageRequest
+                );
+                default -> reviewRepository.findReviewsByUser_IdOrderByIdDesc(
+                        userId, pageRequest
+                );
+            };
+        }
+
+        String nextCursor = null;
+        if (slice.hasNext() && !slice.getContent().isEmpty()) {
+            List<Review> content = slice.getContent();
+            Review last = content.get(content.size() - 1);
+            nextCursor = last.getStars().name() + ":" + last.getId();
+        }
+
+        return UserConverter.toGetMyReviewsPaged(slice, nextCursor);
     }
 }

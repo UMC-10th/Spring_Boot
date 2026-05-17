@@ -2,7 +2,6 @@ package com.umc.umc10th.domain.mission.dto.response;
 
 import lombok.Builder;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public class MissionResponseDto {
@@ -22,4 +21,25 @@ public class MissionResponseDto {
     public record CountMissions(
             int count
     ){}
+
+    @Builder
+    public record GetMissionsPaged(
+            List<GetMission> missions,
+            Integer pageNumber,
+            Integer pageSize,
+            Integer totalPages,
+            Long totalElements,
+            Boolean first,
+            Boolean last
+    ) {
+        @Builder
+        public record GetMission(
+                Long missionId,
+                String storeName,
+                String title,
+                String content,
+                Integer reward,
+                String status
+        ) {}
+    }
 }

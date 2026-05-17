@@ -19,4 +19,21 @@ public class ReviewResponseDto {
             LocalDateTime createdAt
         ){}
     }
+
+    @Builder
+    public record GetMyReviewsPaged(
+            List<ReviewItem> reviews,
+            Boolean hasNext,
+            String nextCursor,
+            Integer pageSize
+    ) {
+        @Builder
+        public record ReviewItem(
+                Long reviewId,
+                String nickname,
+                String stars,
+                String content,
+                LocalDateTime createdAt
+        ) {}
+    }
 }

@@ -21,4 +21,10 @@ public interface UserDoingMissionRepository extends JpaRepository<UserDoingMissi
             @Param("status") String status,
             Pageable pageable
     );
+
+    Page<UserDoingMission> findAllByUser_IdAndMission_Location_Id(
+            Long userId,
+            Long locationId,
+            Pageable pageable
+    );
 }
