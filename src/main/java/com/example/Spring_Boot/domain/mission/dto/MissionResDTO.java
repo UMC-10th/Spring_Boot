@@ -22,6 +22,7 @@ public class MissionResDTO {
     @AllArgsConstructor
     public static class MissionItemDTO {
         private Long missionId;
+        private String storeName;
         private String conditional;
         private Integer point;
         private String status;

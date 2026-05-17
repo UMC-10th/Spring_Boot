@@ -15,4 +15,15 @@ public class UserResDTO {
         private Long userId;
         private String name;
     }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MyPageDTO {
+        private Long userId;
+        private String name;
+        private Integer point;
+        private String gender;
+    }
 }

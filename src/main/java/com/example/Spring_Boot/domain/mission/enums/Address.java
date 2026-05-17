@@ -1,4 +1,8 @@
 package com.example.Spring_Boot.domain.mission.enums;
 
 public enum Address {
+    SEOUL, BUSAN, DAEGU, INCHEON, GWANGJU,
+    DAEJEON, ULSAN, SEJONG, GYEONGGI, GANGWON,
+    CHUNGBUK, CHUNGNAM, JEONBUK, JEONNAM,
+    GYEONGBUK, GYEONGNAM, JEJU
 }
