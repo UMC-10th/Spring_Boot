@@ -1,4 +1,4 @@
-package com.example.umc10th.domain.store.exception.code;
+package com.example.umc10th.domain.mission.exception.code;
 
 import com.example.umc10th.global.apiPayload.code.BaseErrorCode;
 import lombok.AllArgsConstructor;

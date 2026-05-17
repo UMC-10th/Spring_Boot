@@ -1,6 +1,6 @@
-package com.example.umc10th.domain.store.entity;
+package com.example.umc10th.domain.mission.entity;
 
-import com.example.umc10th.domain.location.entity.Location;
+import com.example.umc10th.domain.member.enums.FoodName;
 import com.example.umc10th.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -26,6 +26,11 @@ public class Store extends BaseEntity {
 
     @Column(name = "detail_address", nullable = false, length = 255)
     private String detailAddress;
+
+    @Builder.Default
+    @Enumerated(EnumType.STRING)
+    @Column(name = "food_type", nullable = false, length = 20)
+    private FoodName foodType = FoodName.NONE;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id", nullable = false)
