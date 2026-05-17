@@ -11,8 +11,11 @@ public class ReviewReqDTO {
 
 	public record CreateReview(
 			Long memberMissionId,
-			@NotNull @DecimalMin("0.0") @DecimalMax("5.0") Double starRate,
-			@NotBlank String content,
+			@NotNull(message = "별점은 필수입니다.")
+			@DecimalMin(value = "0.0", message = "별점은 0.0 이상이어야 합니다.")
+			@DecimalMax(value = "5.0", message = "별점은 5.0 이하여야 합니다.")
+			Double starRate,
+			@NotBlank(message = "리뷰 내용은 필수입니다.") String content,
 			List<String> photoUrls
 	) {
 	}
