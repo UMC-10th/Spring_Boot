@@ -47,19 +47,50 @@ public class MissionService {
     }
 
     // 내 미션 목록
-    public MissionResDTO.GetMyMissions getMyMissions(MissionReqDTO.GetMyMissions dto, Pageable pageable) {
+    public MissionResDTO.Pagination<MissionResDTO.GetMission> getMyMissions(
+            Long memberId,
+            Integer pageSize,
+            String cursor,
+            String query) {
 
-        Page<MemberMission> memberMissionPage;
+        PageRequest pageRequest = PageRequest.of(0, pageSize);
 
-        if (dto.isComplete() == null) {
-            memberMissionPage = memberMissionRepository.findByMember_Id(dto.memberId(), pageable);
+        long idCursor;
+        Slice<MemberMission> missionList;
+        String nextCursor;
+
+        if (!cursor.equals("-1")) {
+            String[] cursorSplit = cursor.split(":");
+            switch (query.toLowerCase()) {
+                case "id":
+                    Long prevCursor = Long.parseLong(cursorSplit[0]);
+                    idCursor = Long.parseLong(cursorSplit[1]);
+
+                    missionList = memberMissionRepository.findByMember_IdAndIsCompleteAndIdLessThanOrderByIdDesc(
+                            memberId,
+                            false,
+                            idCursor,
+                            pageRequest
+                    );
+                    break;
+                default:
+                    throw new MissionException(MissionErrorCode.QUERY_NOT_VALID);
+            }
         } else {
-            memberMissionPage = memberMissionRepository.findByMember_IdAndIsComplete(
-                    dto.memberId(), dto.isComplete(), pageable
+            missionList = memberMissionRepository.findByMember_IdAndIsCompleteOrderByIdDesc(
+                    memberId,
+                    false,
+                    pageRequest
             );
         }
+        nextCursor = missionList.getContent().getLast().getId() + ":" + missionList.getContent().getLast().getId();
 
-        return MissionConverter.toGetMyMissions(memberMissionPage);
+        return MissionConverter.toPagination(
+                missionList.map(MissionConverter::toGetMyMission).toList(),
+                missionList.hasNext(),
+                nextCursor,
+                missionList.getSize()
+        );
     }
 
     @Transactional

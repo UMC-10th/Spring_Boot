@@ -87,6 +87,12 @@ public class MissionConverter {
                 .build();
     }
 
+    public static MissionResDTO.GetMission toGetMyMission(
+            MemberMission memberMission
+    ){
+        return toGetMission(memberMission.getMission());
+    }
+
     // 페이지네이션 틀 생성
     public static <T> MissionResDTO.Pagination<T> toPagination(
             List<T> data,

@@ -36,15 +36,15 @@ public class MissionController {
 
     // 내 미션 목록 조회
     // TODO: Security 적용 후 매개변수 변경
-    @GetMapping("/my/missions")
-    public ApiResponse<MissionResDTO.GetMyMissions> getMyMissions(
-            @RequestParam Long memberId,
-            @RequestParam(required = false) Boolean isComplete,
-            Pageable pageable
+    @PostMapping("/my/missions")
+    public ApiResponse<MissionResDTO.Pagination<MissionResDTO.GetMission>> getMyMissions(
+            @RequestBody MissionReqDTO.GetMyMissions req,
+            @RequestParam Integer pageSize,
+            @RequestParam String cursor,
+            @RequestParam String query
     ) {
-        MissionReqDTO.GetMyMissions req = new MissionReqDTO.GetMyMissions(memberId, isComplete);
         BaseSuccessCode code = MissionSuccessCode.MY_MISSIONS_OK;
-        return ApiResponse.success(code, missionService.getMyMissions(req, pageable));
+        return ApiResponse.success(code, missionService.getMyMissions(req.memberId(), pageSize, cursor, query));
     }
 
     //  미션 완료 처리
