@@ -45,7 +45,7 @@ public class ReviewController {
 		);
 	}
 
-	// 내가 작성한 리뷰 목록 조회
+	// 내가 작성한 리뷰 목록 조회 (오프셋)
 	@GetMapping("/members/me/review")
 	public ApiResponse<ReviewResDTO.MyReviews> getMyReviews(
 			@ModelAttribute ReviewReqDTO.MyReviewRequest request
@@ -53,6 +53,17 @@ public class ReviewController {
 		return ApiResponse.onSuccess(
 				GeneralSuccessCode.OK,
 				reviewService.getMyReviews(request)
+		);
+	}
+
+	// 내가 작성한 리뷰 목록 조회 (커서 기반)
+	@PostMapping("/members/me/reviews")
+	public ApiResponse<ReviewResDTO.CursorReviewList> getMyReviewsWithCursor(
+			@RequestBody @Valid ReviewReqDTO.CursorReviewRequest request
+	) {
+		return ApiResponse.onSuccess(
+				GeneralSuccessCode.OK,
+				reviewService.getMyReviewsWithCursor(request)
 		);
 	}
 }

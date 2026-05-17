@@ -81,6 +81,32 @@ public class ReviewService {
 		return ReviewConverter.toCreateReviewResponse(savedReview, savedUrls);
 	}
 
+	public ReviewResDTO.CursorReviewList getMyReviewsWithCursor(ReviewReqDTO.CursorReviewRequest request) {
+		int size = request.size() == null ? 10 : request.size();
+		boolean isStar = "STAR".equalsIgnoreCase(request.sortType());
+
+		List<Review> reviews;
+
+		if (isStar) {
+			BigDecimal cursorStar = request.cursorStar() != null
+					? BigDecimal.valueOf(request.cursorStar()) : null;
+			reviews = reviewRepository.findByMemberIdCursorByStar(
+					request.memberId(),
+					cursorStar,
+					request.cursorId(),
+					PageRequest.of(0, size + 1)
+			);
+		} else {
+			reviews = reviewRepository.findByMemberIdCursorById(
+					request.memberId(),
+					request.cursorId(),
+					PageRequest.of(0, size + 1)
+			);
+		}
+
+		return ReviewConverter.toCursorReviewList(reviews, size);
+	}
+
 	public ReviewResDTO.MyReviews getMyReviews(ReviewReqDTO.MyReviewRequest request) {
 		int page = request.page() == null ? 0 : request.page();
 		int size = request.size() == null ? 10 : request.size();

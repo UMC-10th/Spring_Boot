@@ -22,4 +22,14 @@ public class ReviewReqDTO {
 			Integer size
 	) {
 	}
+
+	public record CursorReviewRequest(
+			@NotNull(message = "회원 ID는 필수입니다.")
+			Long memberId,
+			Integer size,
+			String sortType,
+			Long cursorId,
+			Double cursorStar
+	) {
+	}
 }
