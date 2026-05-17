@@ -1,5 +1,7 @@
 package com.example.umc10th.domain.review.dto;
 
+import jakarta.validation.constraints.NotNull;
+
 import java.util.List;
 
 public class ReviewReqDTO {
@@ -12,5 +14,10 @@ public class ReviewReqDTO {
             String content,
             List<String> photoUrls
     ) {}
+
+    public record GetMyReviews(
+            @NotNull
+            Long memberId
+    ){}
 }
 
