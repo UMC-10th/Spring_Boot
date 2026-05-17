@@ -2,7 +2,7 @@ package com.example.umc10th.domain.review.converter;
 
 import com.example.umc10th.domain.review.dto.ReviewResDTO;
 import com.example.umc10th.domain.review.entity.Review;
-import com.example.umc10th.domain.store.entity.Store;
+import com.example.umc10th.domain.mission.entity.Store;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -16,19 +16,19 @@ public class ReviewConverter {
 		return new ReviewResDTO.StoreInfo(
 				store.getId(),
 				store.getName(),
-				null,
-				store.getLocation().getName().getDisplayName()
+				store.getFoodType().name(),
+				store.getLocation().getName().getDisplayName() + " " + store.getDetailAddress()
 		);
 	}
 
-	public static ReviewResDTO.CreateReview toCreateReviewResponse(Review review) {
+	public static ReviewResDTO.CreateReview toCreateReviewResponse(Review review, List<String> photoUrls) {
 		return new ReviewResDTO.CreateReview(
 				review.getId(),
 				review.getStore().getId(),
 				review.getMember().getId(),
 				review.getStar().doubleValue(),
 				review.getContent(),
-				List.of(),
+				photoUrls,
 				review.getCreatedAt()
 		);
 	}
