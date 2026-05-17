@@ -116,12 +116,7 @@ public class MissionService {
         } else {
             missionList = missionRepository.findMissionByStore_IdOrderByIdDesc(storeId, pageRequest);
         }
-        List<Mission> content = missionList.getContent();
-        nextCursor = "";
-        if (!content.isEmpty()) {
-            Long lastId = content.get(content.size() - 1).getId();
-            nextCursor = lastId + ":" + lastId;
-        }
+        nextCursor = missionList.getContent().getLast().getId() + ":" + missionList.getContent().getLast().getId();
 
         return MissionConverter.toPagination(
                 missionList.map(MissionConverter::toGetMission).toList(),
