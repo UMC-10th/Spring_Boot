@@ -1,4 +1,8 @@
 package com.example.umc10th.domain.member.repository;
 
-public interface MemberRepository {
+import com.example.umc10th.domain.member.entity.Member;
+import org.springframework.data.jpa.repository.JpaRepository;
+// JpaRepository: save(), findById(), findAll(), delete() 등 기본 CRUD 기능 자동 제공
+
+public interface MemberRepository extends JpaRepository<Member, Long> {
 }
