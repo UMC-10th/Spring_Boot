@@ -2,7 +2,7 @@ package com.example.umc10th.domain.member.entity;
 
 import com.example.umc10th.domain.member.entity.mapping.MemberFood;
 import com.example.umc10th.domain.member.entity.mapping.MemberTerm;
-import com.example.umc10th.domain.member.enums.Address;
+import com.example.umc10th.global.enums.Address;
 import com.example.umc10th.domain.member.enums.Gender;
 import com.example.umc10th.domain.member.enums.SocialType;
 import com.example.umc10th.domain.mission.entity.mapping.MemberMission;
