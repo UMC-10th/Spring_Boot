@@ -47,50 +47,19 @@ public class MissionService {
     }
 
     // 내 미션 목록
-    public MissionResDTO.Pagination<MissionResDTO.GetMission> getMyMissions(
-            Long memberId,
-            Integer pageSize,
-            String cursor,
-            String query) {
+    public MissionResDTO.GetMyMissions getMyMissions(MissionReqDTO.GetMyMissions dto, Pageable pageable) {
 
-        PageRequest pageRequest = PageRequest.of(0, pageSize);
+        Page<MemberMission> memberMissionPage;
 
-        long idCursor;
-        Slice<MemberMission> missionList;
-        String nextCursor;
-
-        if (!cursor.equals("-1")) {
-            String[] cursorSplit = cursor.split(":");
-            switch (query.toLowerCase()) {
-                case "id":
-                    Long prevCursor = Long.parseLong(cursorSplit[0]);
-                    idCursor = Long.parseLong(cursorSplit[1]);
-
-                    missionList = memberMissionRepository.findByMember_IdAndIsCompleteAndIdLessThanOrderByIdDesc(
-                            memberId,
-                            false,
-                            idCursor,
-                            pageRequest
-                    );
-                    break;
-                default:
-                    throw new MissionException(MissionErrorCode.QUERY_NOT_VALID);
-            }
+        if (dto.isComplete() == null) {
+            memberMissionPage = memberMissionRepository.findByMember_Id(dto.memberId(), pageable);
         } else {
-            missionList = memberMissionRepository.findByMember_IdAndIsCompleteOrderByIdDesc(
-                    memberId,
-                    false,
-                    pageRequest
+            memberMissionPage = memberMissionRepository.findByMember_IdAndIsComplete(
+                    dto.memberId(), dto.isComplete(), pageable
             );
         }
-        nextCursor = missionList.getContent().getLast().getId() + ":" + missionList.getContent().getLast().getId();
 
-        return MissionConverter.toPagination(
-                missionList.map(MissionConverter::toGetMyMission).toList(),
-                missionList.hasNext(),
-                nextCursor,
-                missionList.getSize()
-        );
+        return MissionConverter.toGetMyMissions(memberMissionPage);
     }
 
     @Transactional
