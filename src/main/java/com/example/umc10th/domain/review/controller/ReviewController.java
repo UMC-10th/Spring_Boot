@@ -52,7 +52,7 @@ public class ReviewController {
     }
 
     // 8.1 커서 기반 리뷰 조회 (ID / 별점 순)
-    @GetMapping("/member/me/reviews/cursor")
+    @GetMapping("/members/me/reviews/cursor")
     public ApiResponse<ReviewResDTO.MyReviewSliceList> getMyReviewsByCursor(
             @RequestParam Long memberId,
             @RequestParam(defaultValue = "id") String sort, // "id" or "star"
