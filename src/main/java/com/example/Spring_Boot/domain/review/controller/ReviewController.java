@@ -2,7 +2,7 @@ package com.example.Spring_Boot.domain.review.controller;
 
 import com.example.Spring_Boot.domain.review.dto.ReviewReqDTO;
 import com.example.Spring_Boot.domain.review.dto.ReviewResDTO;
-import com.example.Spring_Boot.domain.review.enums.ReviewSortType;
+import com.example.Spring_Boot.domain.review.dto.ReviewCursor;
 import com.example.Spring_Boot.domain.review.exception.code.ReviewSuccessCode;
 import com.example.Spring_Boot.domain.review.service.ReviewService;
 import com.example.Spring_Boot.global.apiPayload.ApiResponse;
@@ -33,16 +33,14 @@ public class ReviewController {
     }
 
     // 내가 작성한 리뷰 목록 조회
-    @PostMapping("/reviews/me")
+    @GetMapping("/reviews/me")
     public ApiResponse<ReviewResDTO.MyReviewListResponse> getMyReviews(
-            @Valid @RequestBody ReviewReqDTO.MyReviewRequest request,
-            @RequestParam(defaultValue = "ID") ReviewSortType sort,
-            @RequestParam(required = false) String cursor,
-            @RequestParam(defaultValue = "10") int size
+            @RequestHeader("Authorization") String authorization,
+            ReviewCursor cursor
     ) {
         return ApiResponse.onSuccess(
                 ReviewSuccessCode.MY_REVIEW_LIST_OK,
-                reviewService.getMyReviews(request, sort, cursor, size)
+                reviewService.getMyReviews(authorization, cursor)
         );
     }
 }

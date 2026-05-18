@@ -3,10 +3,10 @@ package com.example.Spring_Boot.domain.review.service;
 import com.example.Spring_Boot.domain.member.entity.Member;
 import com.example.Spring_Boot.domain.member.repository.MemberRepository;
 import com.example.Spring_Boot.domain.review.converter.ReviewConverter;
+import com.example.Spring_Boot.domain.review.dto.ReviewCursor;
 import com.example.Spring_Boot.domain.review.dto.ReviewReqDTO;
 import com.example.Spring_Boot.domain.review.dto.ReviewResDTO;
 import com.example.Spring_Boot.domain.review.entity.Review;
-import com.example.Spring_Boot.domain.review.enums.ReviewSortType;
 import com.example.Spring_Boot.domain.review.exception.ReviewException;
 import com.example.Spring_Boot.domain.review.exception.code.ReviewErrorCode;
 import com.example.Spring_Boot.domain.review.repository.ReviewRepository;
@@ -23,14 +23,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ReviewService {
 
-    private static final int MAX_CURSOR_SIZE = 50;
-
     private final ReviewRepository reviewRepository;
     private final StoreRepository storeRepository;
     private final MemberRepository memberRepository;
 
     @Transactional
-    public ReviewResDTO.CreateReviewResponse createReview(Integer storeId, String authorization , ReviewReqDTO.CreateReviewRequest dto) {
+    public ReviewResDTO.CreateReviewResponse createReview(Integer storeId, String authorization, ReviewReqDTO.CreateReviewRequest dto) {
         validateRating(dto.rating());
 
         Store store = storeRepository.findById(storeId.longValue())
@@ -46,93 +44,30 @@ public class ReviewService {
 
     @Transactional(readOnly = true)
     public ReviewResDTO.MyReviewListResponse getMyReviews(
-            ReviewReqDTO.MyReviewRequest request,
-            ReviewSortType sortType,
-            String cursor,
-            int size
+            String authorization,
+            ReviewCursor cursor
     ) {
-        validateCursorSize(size);
+        Long memberId = extractMemberId(authorization);
+        Pageable pageable = PageRequest.of(0, cursor.size());
 
-        Pageable pageable = PageRequest.of(0, size);
-        Slice<Review> reviewSlice = switch (sortType) {
-            case ID -> {
-                Long cursorId = parseIdCursor(cursor);
-                yield reviewRepository.findMyReviewsOrderByIdDesc(request.userId(), cursorId, pageable);
-            }
+        Slice<Review> reviewSlice = switch (cursor.sortType()) {
+            case ID -> reviewRepository.findMyReviewsOrderByIdDesc(memberId, cursor.reviewId(), pageable);
             case RATING -> {
-                RatingCursor ratingCursor = parseRatingCursor(cursor);
                 yield reviewRepository.findMyReviewsOrderByRatingDesc(
-                        request.userId(),
-                        ratingCursor.rating(),
-                        ratingCursor.reviewId(),
+                        memberId,
+                        cursor.rating(),
+                        cursor.reviewId(),
                         pageable
                 );
             }
         };
 
-        return ReviewConverter.toMyReviewListResponse(reviewSlice, sortType);
+        return ReviewConverter.toMyReviewListResponse(reviewSlice, cursor.sortType());
     }
 
     private void validateRating(Integer rating) {
         if (rating == null || rating < 1 || rating > 5) {
             throw new ReviewException(ReviewErrorCode.INVALID_RATING);
-        }
-    }
-
-    private void validateCursorSize(int size) {
-        if (size <= 0 || size > MAX_CURSOR_SIZE) {
-            throw new ReviewException(ReviewErrorCode.INVALID_CURSOR_REQUEST);
-        }
-    }
-
-    private Long parseIdCursor(String cursor) {
-        if (isFirstCursor(cursor)) {
-            return null;
-        }
-
-        String[] parts = cursor.split(":");
-        if (parts.length != 2 || !ReviewSortType.ID.name().equals(parts[0])) {
-            throw new ReviewException(ReviewErrorCode.INVALID_CURSOR_REQUEST);
-        }
-
-        return parseLong(parts[1]);
-    }
-
-    private RatingCursor parseRatingCursor(String cursor) {
-        if (isFirstCursor(cursor)) {
-            return new RatingCursor(null, null);
-        }
-
-        String[] parts = cursor.split(":");
-        if (parts.length != 3 || !ReviewSortType.RATING.name().equals(parts[0])) {
-            throw new ReviewException(ReviewErrorCode.INVALID_CURSOR_REQUEST);
-        }
-
-        Integer rating = parseInteger(parts[1]);
-        if (rating < 1 || rating > 5) {
-            throw new ReviewException(ReviewErrorCode.INVALID_CURSOR_REQUEST);
-        }
-
-        return new RatingCursor(rating, parseLong(parts[2]));
-    }
-
-    private boolean isFirstCursor(String cursor) {
-        return cursor == null || cursor.isBlank() || "-1".equals(cursor);
-    }
-
-    private Long parseLong(String value) {
-        try {
-            return Long.parseLong(value);
-        } catch (NumberFormatException e) {
-            throw new ReviewException(ReviewErrorCode.INVALID_CURSOR_REQUEST);
-        }
-    }
-
-    private Integer parseInteger(String value) {
-        try {
-            return Integer.parseInt(value);
-        } catch (NumberFormatException e) {
-            throw new ReviewException(ReviewErrorCode.INVALID_CURSOR_REQUEST);
         }
     }
 
@@ -146,8 +81,5 @@ public class ReviewService {
         } catch (NumberFormatException e) {
             throw new ReviewException(ReviewErrorCode.INVALID_AUTHORIZATION);
         }
-    }
-
-    private record RatingCursor(Integer rating, Long reviewId) {
     }
 }

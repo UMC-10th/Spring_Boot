@@ -4,7 +4,6 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 
@@ -23,12 +22,5 @@ public class ReviewReqDTO {
             @Min(value = 1, message = "평점은 1점 이상이어야 합니다.")
             @Max(value = 5, message = "평점은 5점 이하이어야 합니다.")
             Integer rating
-    ) {}
-
-    @Builder
-    public record MyReviewRequest(
-            @NotNull(message = "유저 ID는 필수입니다.")
-            @Positive(message = "유저 ID는 양수여야 합니다.")
-            Long userId
     ) {}
 }
