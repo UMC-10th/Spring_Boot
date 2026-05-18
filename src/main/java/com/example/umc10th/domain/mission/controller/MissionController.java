@@ -8,10 +8,7 @@ import com.example.umc10th.global.apiPayload.ApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,14 +29,14 @@ public class MissionController {
         return ApiResponse.onSuccess(MissionSuccessCode.GET_MISSION_LIST, result);
     }
 
-    // 4(1). 내가 진행중인 미션만 조회 (사용자 ID는 Body로 받음, 오프셋 기반 페이지네이션)
+    // 4(1). 내가 진행중인 미션만 조회 (사용자 ID는 쿼리파라미터로 받음, 오프셋 기반 페이지네이션)
     @GetMapping("/member-missions/in-progress")
     public ApiResponse<MissionResDTO.MissionList> getMyInProgressMissions(
-            @Valid @RequestBody MissionReqDTO.MyInProgressMissionRequest request,
+            @RequestParam Long memberId,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size
     ) {
-        MissionResDTO.MissionList result = missionService.getMyInProgressMissions(request.memberId(), page, size);
+        MissionResDTO.MissionList result = missionService.getMyInProgressMissions(memberId, page, size);
         return ApiResponse.onSuccess(MissionSuccessCode.GET_MISSION_LIST, result);
     }
 
