@@ -24,4 +24,13 @@ public class ReviewConverter {
                 .rating(review.getRating())
                 .build();
     }
+
+    public static ReviewResDTO.GetReview toGetReview(Review review) {
+        return ReviewResDTO.GetReview.builder()
+                .reviewId(review.getId())
+                .content(review.getContent())
+                .rating(review.getRating())
+                .createdAt(review.getCreatedAt().toString())
+                .build();
+    }
 }
