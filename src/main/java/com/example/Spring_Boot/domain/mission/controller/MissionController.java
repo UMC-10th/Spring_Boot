@@ -6,6 +6,7 @@ import com.example.Spring_Boot.domain.mission.enums.Status;
 import com.example.Spring_Boot.domain.mission.exception.code.MissionSuccessCode;
 import com.example.Spring_Boot.domain.mission.service.MissionService;
 import com.example.Spring_Boot.global.apiPayload.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,22 @@ import org.springframework.web.bind.annotation.*;
 public class MissionController {
 
     private final MissionService missionService;
+
+    // 내가 진행중인 미션 목록 조회
+    @PostMapping("/in-progress")
+    public ApiResponse<MissionResDTO.MissionListResponse> getInProgressMissions(
+            @Valid @RequestBody MissionReqDTO.InProgressMissionRequest request,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        MissionResDTO.MissionListResponse response =
+                missionService.getInProgressMissions(request, page, size);
+
+        return ApiResponse.onSuccess(
+                MissionSuccessCode.USER_MISSION_LIST_OK,
+                response
+        );
+    }
 
     // 미션 목록 조회
     @GetMapping
@@ -37,7 +54,7 @@ public class MissionController {
     public ApiResponse<MissionResDTO.MissionSuccessResponse> completeUserMission(
             @PathVariable("userMissionId") Long userMissionId,
             @RequestHeader("Authorization") String authorization,
-            @RequestBody MissionReqDTO.MissionSuccessRequest request
+            @Valid @RequestBody MissionReqDTO.MissionSuccessRequest request
     ) {
         MissionResDTO.MissionSuccessResponse response =
                 missionService.completeUserMission(

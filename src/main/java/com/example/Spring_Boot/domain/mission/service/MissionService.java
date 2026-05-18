@@ -33,6 +33,26 @@ public class MissionService {
     private final CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true)
+    public MissionResDTO.MissionListResponse getInProgressMissions(
+            MissionReqDTO.InProgressMissionRequest request,
+            int page,
+            int size
+    ) {
+        validatePageRequest(page, size);
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<UserMission> userMissionPage =
+                userMissionRepository.findUserMissionsByMemberIdAndStatus(
+                        request.userId(),
+                        Status.INCOMPLETE,
+                        pageable
+                );
+        Map<Long, Category> categoryByStoreId = getCategoryByStoreId(userMissionPage);
+
+        return MissionConverter.toMissionListResponse(userMissionPage, categoryByStoreId);
+    }
+
+    @Transactional(readOnly = true)
     public MissionResDTO.MissionListResponse getUserMissions(
             Status status,
             int page,

@@ -14,4 +14,32 @@ public class ReviewResDTO {
             List<String> imageUrls,
             Integer rating
     ) {}
+
+    @Builder
+    public record MyReviewListResponse(
+            List<MyReviewInfo> reviewList,
+            CursorInfo pageInfo
+    ) {}
+
+    @Builder
+    public record MyReviewInfo(
+            Long reviewId,
+            String content,
+            Integer rating,
+            String reply,
+            StoreInfo storeInfo
+    ) {}
+
+    @Builder
+    public record StoreInfo(
+            Long storeId,
+            String name
+    ) {}
+
+    @Builder
+    public record CursorInfo(
+            Boolean hasNext,
+            String nextCursor,
+            Integer size
+    ) {}
 }
