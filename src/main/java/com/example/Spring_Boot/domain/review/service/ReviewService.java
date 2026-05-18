@@ -3,6 +3,7 @@ package com.example.Spring_Boot.domain.review.service;
 import com.example.Spring_Boot.domain.member.entity.Member;
 import com.example.Spring_Boot.domain.member.repository.MemberRepository;
 import com.example.Spring_Boot.domain.review.converter.ReviewConverter;
+import com.example.Spring_Boot.domain.review.dto.ReviewCursor;
 import com.example.Spring_Boot.domain.review.dto.ReviewReqDTO;
 import com.example.Spring_Boot.domain.review.dto.ReviewResDTO;
 import com.example.Spring_Boot.domain.review.entity.Review;
@@ -12,6 +13,9 @@ import com.example.Spring_Boot.domain.review.repository.ReviewRepository;
 import com.example.Spring_Boot.domain.store.entity.Store;
 import com.example.Spring_Boot.domain.store.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,7 +28,7 @@ public class ReviewService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public ReviewResDTO.CreateReviewResponse createReview(Integer storeId, String authorization , ReviewReqDTO.CreateReviewRequest dto) {
+    public ReviewResDTO.CreateReviewResponse createReview(Integer storeId, String authorization, ReviewReqDTO.CreateReviewRequest dto) {
         validateRating(dto.rating());
 
         Store store = storeRepository.findById(storeId.longValue())
@@ -36,6 +40,29 @@ public class ReviewService {
         Review savedReview = reviewRepository.save(review);
 
         return ReviewConverter.toCreateReviewResponse(savedReview);
+    }
+
+    @Transactional(readOnly = true)
+    public ReviewResDTO.MyReviewListResponse getMyReviews(
+            String authorization,
+            ReviewCursor cursor
+    ) {
+        Long memberId = extractMemberId(authorization);
+        Pageable pageable = PageRequest.of(0, cursor.size());
+
+        Slice<Review> reviewSlice = switch (cursor.sortType()) {
+            case ID -> reviewRepository.findMyReviewsOrderByIdDesc(memberId, cursor.reviewId(), pageable);
+            case RATING -> {
+                yield reviewRepository.findMyReviewsOrderByRatingDesc(
+                        memberId,
+                        cursor.rating(),
+                        cursor.reviewId(),
+                        pageable
+                );
+            }
+        };
+
+        return ReviewConverter.toMyReviewListResponse(reviewSlice, cursor.sortType());
     }
 
     private void validateRating(Integer rating) {

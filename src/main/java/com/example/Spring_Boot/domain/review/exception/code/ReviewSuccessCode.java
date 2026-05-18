@@ -13,6 +13,11 @@ public enum ReviewSuccessCode implements BaseSuccessCode {
             HttpStatus.CREATED,
             "REVIEW201_1",
             "리뷰 작성이 완료되었습니다."
+    ),
+    MY_REVIEW_LIST_OK(
+            HttpStatus.OK,
+            "REVIEW200_1",
+            "내가 작성한 리뷰 목록 조회에 성공했습니다."
     );
 
     private final HttpStatus status;

@@ -28,6 +28,11 @@ public enum ReviewErrorCode implements BaseErrorCode {
             HttpStatus.BAD_REQUEST,
             "REVIEW400_1",
             "리뷰 평점은 1점 이상 5점 이하로 입력해야 합니다."
+    ),
+    INVALID_CURSOR_REQUEST(
+            HttpStatus.BAD_REQUEST,
+            "REVIEW400_2",
+            "커서 요청 값이 올바르지 않습니다."
     );
 
     private final HttpStatus status;
