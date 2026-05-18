@@ -1,6 +1,7 @@
 package com.example.umc10th.domain.review.dto;
 
 import com.example.umc10th.global.dto.PageInfoDTO;
+import com.example.umc10th.global.dto.SliceInfoDTO;
 import lombok.Builder;
 
 import java.math.BigDecimal;
@@ -41,10 +42,17 @@ public class ReviewResDTO {
             LocalDateTime createdAt
     ) {}
 
-    // 내가 작성한 리뷰 목록
+    // 내가 작성한 리뷰 목록 (Page -> 오프셋 기반)
     @Builder
     public record MyReviewList(
             List<MyReviewInfo> reviews,
-            PageInfoDTO pageInfo
+            PageInfoDTO pageInfo // 페이지 번호 기반
+    ) {}
+
+    // Slice -> 커서 기반 응답
+    @Builder
+    public record MyReviewSliceList(
+            List<MyReviewInfo> reviews,
+            SliceInfoDTO sliceInfo // 커서 기반
     ) {}
 }

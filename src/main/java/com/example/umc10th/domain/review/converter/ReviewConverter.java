@@ -6,11 +6,23 @@ import com.example.umc10th.domain.review.dto.ReviewReqDTO;
 import com.example.umc10th.domain.review.dto.ReviewResDTO;
 import com.example.umc10th.domain.review.entity.Review;
 import com.example.umc10th.global.dto.PageInfoDTO;
+import com.example.umc10th.global.dto.SliceInfoDTO;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Slice;
 
 import java.util.List;
 
 public class ReviewConverter {
+
+    // 가게 정보 변환
+    public static ReviewResDTO.StoreInfo toStoreInfo(Store store) {
+        return ReviewResDTO.StoreInfo.builder()
+                .storeId(store.getId())
+                .name(store.getName())
+                .foodType(store.getFoodType())
+                .address(store.getDetailAddress())
+                .build();
+    }
 
     // 요청 -> 엔티티
     public static Review toReview(ReviewReqDTO.CreateReview request, Member member, Store store) {
@@ -56,6 +68,26 @@ public class ReviewConverter {
         return ReviewResDTO.MyReviewList.builder()
                 .reviews(reviews)
                 .pageInfo(PageInfoDTO.from(reviewPage))
+                .build();
+    }
+
+    // Slice -> MyReviewSliceList 변환
+    public static ReviewResDTO.MyReviewSliceList toMyReviewSliceList(
+            Slice<Review> reviewSlice, String nextCursor
+    ) {
+        List<ReviewResDTO.MyReviewInfo> reviews = reviewSlice.getContent().stream()
+                .map(ReviewConverter::toMyReviewInfo)
+                .toList();
+
+        SliceInfoDTO sliceInfo = SliceInfoDTO.builder()
+                .nextCursor(nextCursor)
+                .hasNext(reviewSlice.hasNext())
+                .numberOfElements(reviewSlice.getNumberOfElements())
+                .build();
+
+        return ReviewResDTO.MyReviewSliceList.builder()
+                .reviews(reviews)
+                .sliceInfo(sliceInfo)
                 .build();
     }
 }

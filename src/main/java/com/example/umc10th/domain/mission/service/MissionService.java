@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,17 @@ public class MissionService {
 
         // @Query 메서드 호출
         Page<MemberMission> missionPage = memberMissionRepository.findByMemberIdAndStatus(memberId, isComplete, pageable);
+
+        return MissionConverter.toMissionList(missionPage);
+    }
+
+    // 내가 진행중인 미션만 조회 (오프셋 기반 페이지네이션)
+    public MissionResDTO.MissionList getMyInProgressMissions(Long memberId, Integer page, Integer size) {
+        // 최신 미션이 먼저 보이도록 id DESC 정렬
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+
+        // isComplete = false -> 진행중인 미션만 조회
+        Page<MemberMission> missionPage = memberMissionRepository.findByMemberIdAndStatus(memberId, false, pageable);
 
         return MissionConverter.toMissionList(missionPage);
     }
