@@ -14,7 +14,8 @@ public class HomeResDTO {
             RegionInfo region,
             MissionProgressInfo missionProgress,
             @JsonProperty("MissionList")
-            List<MissionInfo> missionList
+            List<MissionInfo> missionList,
+            PageInfo pageInfo
     ) {
     }
 
@@ -54,6 +55,16 @@ public class HomeResDTO {
     public record CategoryInfo(
             Long categoryId,
             String name
+    ) {
+    }
+
+    @Builder
+    public record PageInfo(
+            Integer page,
+            Integer size,
+            Long totalElements,
+            Integer totalPages,
+            Boolean hasNext
     ) {
     }
 }

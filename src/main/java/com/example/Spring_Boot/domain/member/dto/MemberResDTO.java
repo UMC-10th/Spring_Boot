@@ -18,4 +18,16 @@ public class MemberResDTO {
             List<Long> categoryIds
     ) {
     }
+
+    @Builder
+    public record MyPageResponse(
+            Long userId,
+            String name,
+            String nickname,
+            String email,
+            String phoneNumber,
+            Integer point,
+            String socialProvider
+    ) {
+    }
 }

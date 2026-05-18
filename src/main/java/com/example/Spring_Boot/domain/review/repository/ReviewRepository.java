@@ -1,7 +1,7 @@
 package com.example.Spring_Boot.domain.review.repository;
 
-import org.springframework.stereotype.Repository;
+import com.example.Spring_Boot.domain.review.entity.Review;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Repository
-public interface ReviewRepository {
+public interface ReviewRepository extends JpaRepository<Review, Long> {
 }

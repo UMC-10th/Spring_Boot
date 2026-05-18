@@ -21,9 +21,11 @@ public class HomeController {
     @GetMapping
     public ApiResponse<HomeResDTO.GetHomeResponse> getHome(
             @RequestParam Long regionId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
             @RequestHeader("Authorization") String authorization
     ) {
-        HomeResDTO.GetHomeResponse response = homeFacadeService.getHome(regionId, authorization);
+        HomeResDTO.GetHomeResponse response = homeFacadeService.getHome(regionId, page, size, authorization);
 
         return ApiResponse.onSuccess(
                 GeneralSuccessCode.OK,

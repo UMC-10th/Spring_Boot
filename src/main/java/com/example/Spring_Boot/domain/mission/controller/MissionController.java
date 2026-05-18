@@ -7,10 +7,9 @@ import com.example.Spring_Boot.domain.mission.exception.code.MissionSuccessCode;
 import com.example.Spring_Boot.domain.mission.service.MissionService;
 import com.example.Spring_Boot.global.apiPayload.ApiResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/missions")
 public class MissionController {
@@ -21,9 +20,11 @@ public class MissionController {
     @GetMapping
     public ApiResponse<MissionResDTO.MissionListResponse> getUserMissions(
             @RequestParam Status status,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
             @RequestHeader("Authorization") String authorization
     ) {
-        MissionResDTO.MissionListResponse response = missionService.getUserMissions(status, authorization);
+        MissionResDTO.MissionListResponse response = missionService.getUserMissions(status, page, size, authorization);
 
         return ApiResponse.onSuccess(
                 MissionSuccessCode.USER_MISSION_LIST_OK,
@@ -44,5 +45,10 @@ public class MissionController {
                         authorization,
                         request
                 );
+
+        return ApiResponse.onSuccess(
+                MissionSuccessCode.USER_MISSION_SUCCESS_OK,
+                response
+        );
     }
 }
