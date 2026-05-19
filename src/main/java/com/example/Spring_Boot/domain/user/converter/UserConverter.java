@@ -1,9 +1,36 @@
 package com.example.Spring_Boot.domain.user.converter;
 
+import com.example.Spring_Boot.domain.mission.enums.Address;
+import com.example.Spring_Boot.domain.user.dto.UserReqDTO;
 import com.example.Spring_Boot.domain.user.dto.UserResDTO;
 import com.example.Spring_Boot.domain.user.entity.User;
+import com.example.Spring_Boot.domain.user.enums.Gender;
+import com.example.Spring_Boot.domain.user.enums.SocialType;
+import java.time.LocalDate;
 
 public class UserConverter {
+
+    public static User toUser(UserReqDTO.JoinDTO request, String encodedPassword) {
+        return User.builder()
+                .name(request.getName())
+                .email(request.getEmail())
+                .password(encodedPassword)
+                .gender(request.getGender() != null ? Gender.valueOf(request.getGender()) : Gender.NONE)
+                .birth(LocalDate.now())
+                .address(Address.SEOUL)
+                .detailAddress("")
+                .socialUid("")
+                .socialType(SocialType.NONE)
+                .build();
+    }
+
+    public static UserResDTO.JoinResultDTO toJoinResultDTO(User user) {
+        return UserResDTO.JoinResultDTO.builder()
+                .userId(user.getId())
+                .name(user.getName())
+                .email(user.getEmail())
+                .build();
+    }
 
     public static UserResDTO.MyPageDTO toMyPageDTO(User user) {
         return UserResDTO.MyPageDTO.builder()
