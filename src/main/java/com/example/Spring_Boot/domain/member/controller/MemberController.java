@@ -5,6 +5,7 @@ import com.example.Spring_Boot.domain.member.dto.MemberResDTO;
 import com.example.Spring_Boot.domain.member.exception.code.MemberSuccessCode;
 import com.example.Spring_Boot.domain.member.service.MemberService;
 import com.example.Spring_Boot.global.apiPayload.ApiResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,8 +35,8 @@ public class MemberController {
 
     @PostMapping
     public ApiResponse<MemberResDTO.CreateMemberResponse> createMember(
-            @RequestBody MemberReqDTO.CreateMemberRequest request
-            ) {
+            @Valid @RequestBody MemberReqDTO.CreateMemberRequest request
+    ) {
         MemberResDTO.CreateMemberResponse response = memberService.createMember(request);
 
         return ApiResponse.onSuccess(

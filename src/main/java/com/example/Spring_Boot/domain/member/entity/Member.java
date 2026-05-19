@@ -40,6 +40,11 @@ public class Member {
     @Column(nullable = false, length = 15)
     private String nickname;
 
+    @Column(unique = true)
+    private String email;
+
+    private String password;
+
     @Builder.Default
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
