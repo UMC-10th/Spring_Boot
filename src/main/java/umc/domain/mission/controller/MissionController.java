@@ -5,6 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import umc.domain.mission.dto.response.MissionResponseDto;
 
+import umc.domain.mission.service.MissionQueryService;
+import umc.domain.user.entity.mapping.MissionStatus;
+import umc.domain.user.entity.mapping.UserMission;
 import umc.global.apiPayload.ApiResponse;
 import umc.global.apiPayload.code.status.GeneralSuccessCode;
 import umc.global.common.PageResponseDto;

@@ -5,8 +5,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import umc.domain.user.entity.mapping.MissionStatus; // 👈 유저 매핑 패키지 명시
-import umc.domain.user.entity.mapping.UserMission;   // 👈 유저 매핑 패키지 명시
+import umc.domain.user.entity.mapping.MissionStatus;
+import umc.domain.user.entity.mapping.UserMission;
 
 public interface UserMissionRepository extends JpaRepository<UserMission, Long> {
 

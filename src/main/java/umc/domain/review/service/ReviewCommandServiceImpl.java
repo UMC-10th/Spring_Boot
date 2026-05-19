@@ -10,6 +10,8 @@ import umc.domain.review.entity.Review;
 import umc.domain.review.repository.ReviewRepository;
 import umc.domain.user.entity.User;
 import umc.domain.user.repository.UserRepository;
+import umc.global.apiPayload.code.status.GeneralErrorCode;
+import umc.global.apiPayload.exception.ProjectException;
 
 @Service
 @RequiredArgsConstructor
@@ -23,11 +25,11 @@ public class ReviewCommandServiceImpl {
     public Review createReview(Long userId, Long missionId, ReviewRequestDto.CreateReviewDto request) {
         // 유저 찾기
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("해당 유저를 찾을 수 없습니다."));
+                .orElseThrow(() -> new ProjectException(GeneralErrorCode.NOT_FOUND));
 
-        //  미션 찾기
+// 미션 찾기
         Mission mission = missionRepository.findById(missionId)
-                .orElseThrow(() -> new RuntimeException("해당 미션을 찾을 수 없습니다."));
+                .orElseThrow(() -> new ProjectException(GeneralErrorCode.NOT_FOUND));
 
         Review review = Review.builder()
                 .user(user)
