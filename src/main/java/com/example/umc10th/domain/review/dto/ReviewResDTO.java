@@ -13,4 +13,14 @@ public class ReviewResDTO {
         private Long reviewId;
         private LocalDateTime createdAt;
     }
+
+    @Builder
+    @Getter
+    public static class MyReviewItem {
+        private Long reviewId;
+        private String restaurantName;
+        private Integer rating;
+        private String content;
+        private LocalDateTime createdAt;
+    }
 }

@@ -26,5 +26,18 @@ public class ReviewConverter {
                 .createdAt(review.getCreatedAt())
                 .build();
     }
+    /**
+     * Review 엔티티 → MyReviewItem DTO 단일 매핑.
+     * restaurant.restaurantName 접근 시 fetch join 덕분에 추가 쿼리 없음.
+     */
+    public static ReviewResDTO.MyReviewItem toMyReviewItem(Review review) {
+        return ReviewResDTO.MyReviewItem.builder()
+                .reviewId(review.getId())
+                .restaurantName(review.getRestaurant().getRestaurantName())
+                .rating(review.getRating())
+                .content(review.getContent())
+                .createdAt(review.getCreatedAt())
+                .build();
+    }
 }
 

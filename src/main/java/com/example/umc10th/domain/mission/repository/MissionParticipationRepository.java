@@ -58,6 +58,7 @@ public interface MissionParticipationRepository extends JpaRepository<MissionPar
                     SELECT mp
                     FROM MissionParticipation mp
                     JOIN FETCH mp.mission m
+                    JOIN FETCH m.restaurant r
                     WHERE mp.member.id = :memberId
                     AND mp.missionStatus = :status
                     """,
