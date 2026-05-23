@@ -17,5 +17,22 @@ public class ReviewResDTO {
             List<String> photoUrls,
             LocalDateTime createdAt
     ) {}
+
+    @Builder
+    public record GetMyReviews(
+            Long reviewId,
+            Long storeId,
+            Float star,
+            String content,
+            LocalDateTime createdAt
+    ){}
+
+    @Builder
+    public record Pagination<T>(
+            List<T> data,
+            Boolean hasNext,
+            String nextCursor,
+            Integer pageSize
+    ){}
 }
 

@@ -1,4 +1,4 @@
-package com.example.umc10th.domain.review.exception.code;
+package com.example.umc10th.domain.mission.exception.code;
 
 import com.example.umc10th.global.apiPayload.code.BaseErrorCode;
 import lombok.Getter;
@@ -7,15 +7,14 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum ReviewErrorCode implements BaseErrorCode {
+public enum StoreErrorCode implements BaseErrorCode {
 
-    QUERY_NOT_VALID(HttpStatus.BAD_REQUEST,
-            "REVIEW400_1",
-                    "쿼리가 유효하지 않습니다."),
-            ;
+    NOT_FOUND(HttpStatus.NOT_FOUND,
+            "STORE404_1",
+            "해당 가게가 존재하지 않습니다."),
+    ;
 
     private final HttpStatus status;
     private final String code;
     private final String message;
-
 }

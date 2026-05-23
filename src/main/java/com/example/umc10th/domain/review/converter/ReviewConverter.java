@@ -31,4 +31,30 @@ public class ReviewConverter {
                 .createdAt(review.getCratedAt())
                 .build();
     }
+
+    public static ReviewResDTO.GetMyReviews toGetMyReviews(
+            Review review
+    ){
+        return ReviewResDTO.GetMyReviews.builder()
+                .reviewId(review.getId())
+                .storeId(review.getStore().getId())
+                .star(review.getStar())
+                .createdAt(review.getCratedAt())
+                .content(review.getContent())
+                .build();
+    }
+
+    public static<T> ReviewResDTO.Pagination<T> toPagination(
+            List<T> data,
+            Boolean hasNext,
+            String nextCursor,
+            Integer pageSize
+    ){
+        return ReviewResDTO.Pagination.<T>builder()
+                .data(data)
+                .hasNext(hasNext)
+                .nextCursor(nextCursor)
+                .pageSize(pageSize)
+                .build();
+    }
 }
