@@ -16,6 +16,7 @@ import com.example.umc10th.domain.mission.repository.MemberMissionRepository;
 import com.example.umc10th.domain.mission.repository.MissionRespository;
 import com.example.umc10th.domain.mission.repository.StoreRepository;
 import com.example.umc10th.global.apiPayload.code.GeneralErrorCode;
+import com.example.umc10th.global.cursor.Cursor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -86,27 +87,19 @@ public class MissionService {
     // 가게 내 미션들 조회
     public MissionResDTO.Pagination<MissionResDTO.GetMission> getMissions(
             Long storeId,
-            Integer pageSize,
-            String cursor,
-            String query
+            Cursor cursor
     ) {
 
-        PageRequest pageRequest = PageRequest.of(0, pageSize);
+        PageRequest pageRequest = cursor.toPageRequest();
 
-        long idCursor;
         Slice<Mission> missionList;
-        String nextCursor;
 
-        if (!cursor.equals("-1")) {
-            String[] cursorSplit = cursor.split(":");
-            switch (query.toLowerCase()) {
+        if (!cursor.firstPage()) {
+            switch (cursor.queryLowerCase()) {
                 case "id":
-                    Long prevCursor = Long.parseLong(cursorSplit[0]);
-                    idCursor = Long.parseLong(cursorSplit[1]);
-
                     missionList = missionRepository.findMissionByStore_IdAndIdLessThanOrderByIdDesc(
                             storeId,
-                            idCursor,
+                            cursor.idCursor(),
                             pageRequest
                     );
                     break;
@@ -116,13 +109,20 @@ public class MissionService {
         } else {
             missionList = missionRepository.findMissionByStore_IdOrderByIdDesc(storeId, pageRequest);
         }
-        nextCursor = missionList.getContent().getLast().getId() + ":" + missionList.getContent().getLast().getId();
+
+        List<Mission> content = missionList.getContent();
+        String nextCursor = "";
+
+        if (!content.isEmpty()) {
+            Mission lastMission = content.getLast();
+            nextCursor = lastMission.getId() + ":" + lastMission.getId();
+        }
 
         return MissionConverter.toPagination(
                 missionList.map(MissionConverter::toGetMission).toList(),
                 missionList.hasNext(),
                 nextCursor,
-                missionList.getSize()
+                cursor.pageSize()
         );
     }
 

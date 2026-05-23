@@ -6,6 +6,7 @@ import com.example.umc10th.domain.mission.exception.code.MissionSuccessCode;
 import com.example.umc10th.domain.mission.service.MissionService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
 import com.example.umc10th.global.apiPayload.code.BaseSuccessCode;
+import com.example.umc10th.global.cursor.Cursor;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -69,14 +70,11 @@ public class MissionController {
     @GetMapping("/stores/{storeId}/missions")
     public ApiResponse<MissionResDTO.Pagination<MissionResDTO.GetMission>> getMissions(
             @PathVariable Long storeId,
-            @RequestParam Integer pageSize,
-            @RequestParam String cursor,
-            @RequestParam String query
+            Cursor cursor
     ){
         BaseSuccessCode code = MissionSuccessCode.OK;
-        return ApiResponse.success(code, missionService.getMissions(storeId, pageSize, cursor, query));
+        return ApiResponse.success(code, missionService.getMissions(storeId, cursor));
     }
 
 
 }
-

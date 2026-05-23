@@ -13,6 +13,7 @@ import com.example.umc10th.domain.review.exception.ReviewException;
 import com.example.umc10th.domain.review.exception.code.ReviewErrorCode;
 import com.example.umc10th.domain.review.repository.ReviewRepository;
 import com.example.umc10th.global.apiPayload.code.GeneralErrorCode;
+import com.example.umc10th.global.cursor.Cursor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -47,39 +48,27 @@ public class ReviewService {
 
     public ReviewResDTO.Pagination<ReviewResDTO.GetMyReviews> getMyReviews(
             Long memberId,
-            Integer pageSize,
-            String cursor,
-            String query
+            Cursor cursor
 
     ) {
-        PageRequest pageRequest = PageRequest.of(0, pageSize);
+        PageRequest pageRequest = cursor.toPageRequest();
 
-        long idCursor;
         Slice<Review> reviewList;
-        String nextCursor;
 
-        if(!cursor.equals("-1")){
-
-            String[] cursorSplit = cursor.split(":");
-            switch(query.toLowerCase()){
+        if(!cursor.firstPage()){
+            switch(cursor.queryLowerCase()){
                 case "id":
-
-                    Long prevCursor = Long.parseLong(cursorSplit[0]);
-                    idCursor = Long.parseLong(cursorSplit[1]);
-
                     reviewList = reviewRepository.findReviewByMember_IdAndIdLessThanOrderByIdDesc(
                             memberId,
-                            idCursor,
+                            cursor.idCursor(),
                             pageRequest
                     );
                     break;
                 case "star":
-                    Float prevStar = Float.parseFloat(cursorSplit[0]);
-                    idCursor = Long.parseLong(cursorSplit[1]);
                     reviewList = reviewRepository.findReviewByMember_IdAndStarCursorDesc(
                             memberId,
-                            prevStar,
-                            idCursor,
+                            cursor.valueAsFloat(),
+                            cursor.idCursor(),
                             pageRequest
                     );
                     break;
@@ -87,19 +76,19 @@ public class ReviewService {
                     throw new ReviewException(ReviewErrorCode.QUERY_NOT_VALID);
                 }
         } else {
-            if(query.equalsIgnoreCase("star")) {
+            if(cursor.isQuery("star")) {
                 reviewList = reviewRepository.findReviewByMember_IdOrderByStarDescIdDesc(memberId, pageRequest);
             } else{
                 reviewList = reviewRepository.findReviewByMember_IdOrderByIdDesc(memberId, pageRequest);
             }
         }
         List<Review> content = reviewList.getContent();
-        nextCursor = "";
+        String nextCursor = "";
 
         if (!content.isEmpty()) {
             Review lastReview = content.getLast();
 
-            if (query.equalsIgnoreCase("star")) {
+            if (cursor.isQuery("star")) {
                 nextCursor = lastReview.getStar() + ":" + lastReview.getId();
             } else {
                 nextCursor = lastReview.getId() + ":" + lastReview.getId();
@@ -111,7 +100,7 @@ public class ReviewService {
                 reviewList.map(ReviewConverter::toGetMyReviews).toList(),
                 reviewList.hasNext(),
                 nextCursor,
-                reviewList.getSize()
+                cursor.pageSize()
         );
     }
 }
