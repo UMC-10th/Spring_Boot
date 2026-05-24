@@ -57,6 +57,10 @@ public class MemberService {
 
     @Transactional
     public MemberResDTO.SignUp signUp(MemberReqDTO.SignUp dto) {
+        if (memberRepository.existsByEmail(dto.email())) {
+            throw new MemberException(MemberErrorCode.MEMBER_EMAIL_DUPLICATED);
+        }
+
         Member member = Member.builder()
                 .name(dto.name())
                 .nickname(dto.nickname())
