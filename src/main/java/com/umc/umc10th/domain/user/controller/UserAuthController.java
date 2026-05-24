@@ -16,10 +16,10 @@ public class UserAuthController {
 
     private final UserService userService;
 
-//    @PostMapping("/signup")
-//    public ApiResponse<Void> getInfo(@Valid @RequestBody UserRequestDto.CreateUser dto) {
-//        BaseSuccessCode code = UserSuccessCode.OK;
-//        userService.createUser(dto);
-//        return ApiResponse.onSuccess(code);
-//    }
+    @PostMapping("/signup")
+    public ApiResponse<Void> signup(@Valid @RequestBody UserRequestDto.CreateUser dto) {
+        BaseSuccessCode code = UserSuccessCode.OK;
+        userService.createUser(dto);
+        return ApiResponse.onSuccess(code);
+    }
 }

@@ -10,6 +10,8 @@ import com.umc.umc10th.domain.user.dto.request.UserRequestDto;
 import com.umc.umc10th.domain.user.dto.response.UserResponseDto;
 import com.umc.umc10th.domain.user.entity.User;
 import com.umc.umc10th.domain.user.entity.UserDoingMission;
+import com.umc.umc10th.domain.user.exception.UserException;
+import com.umc.umc10th.domain.user.exception.code.UserErrorCode;
 import com.umc.umc10th.domain.user.repository.UserDoingMissionRepository;
 import com.umc.umc10th.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,10 +33,20 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserDoingMissionRepository userDoingMissionRepository;
     private final ReviewRepository reviewRepository;
+    private final PasswordEncoder passwordEncoder;
 
     // 임시 인증 유저 ID - 실제로는 SecurityContextHolder 등에서 추출
     private static final Long TEMP_USER_ID = 1L;
     private static final int PAGE_SIZE = 10;
+
+    @Transactional
+    public void createUser(UserRequestDto.CreateUser dto) {
+        if (userRepository.existsByLoginId(dto.email())) {
+            throw new UserException(UserErrorCode.DUPLICATE_EMAIL);
+        }
+        String encodedPassword = passwordEncoder.encode(dto.password());
+        userRepository.save(UserConverter.toUser(dto, encodedPassword));
+    }
 
     public UserResponseDto.GetInfo getInfo() {
         User user = userRepository.findUserInfo(TEMP_USER_ID)
@@ -107,20 +120,31 @@ public class UserService {
         Slice<Review> slice;
 
         if (!cursor.equals("-1")) {
-            String[] split = cursor.split(":");
+            String[] split = cursor.split(":", 2);
+            if (split.length < 2) {
+                throw new IllegalArgumentException("유효하지 않은 커서 형식입니다: " + cursor);
+            }
             switch (query.toUpperCase()) {
                 case "ID" -> {
-                    Long idCursor = Long.parseLong(split[1]);
-                    slice = reviewRepository.findReviewsByUser_IdAndIdLessThanOrderByIdDesc(
-                            userId, idCursor, pageRequest
-                    );
+                    try {
+                        Long idCursor = Long.parseLong(split[1]);
+                        slice = reviewRepository.findReviewsByUser_IdAndIdLessThanOrderByIdDesc(
+                                userId, idCursor, pageRequest
+                        );
+                    } catch (NumberFormatException e) {
+                        throw new IllegalArgumentException("유효하지 않은 커서 형식입니다: " + cursor);
+                    }
                 }
                 case "STARS" -> {
-                    Stars starsCursor = Stars.valueOf(split[0]);
-                    Long idCursor = Long.parseLong(split[1]);
-                    slice = reviewRepository.findReviewsByUser_IdOrderByStarsDesc(
-                            userId, starsCursor, idCursor, pageRequest
-                    );
+                    try {
+                        Stars starsCursor = Stars.valueOf(split[0]);
+                        Long idCursor = Long.parseLong(split[1]);
+                        slice = reviewRepository.findReviewsByUser_IdOrderByStarsDesc(
+                                userId, starsCursor, idCursor, pageRequest
+                        );
+                    } catch (IllegalArgumentException e) {
+                        throw new IllegalArgumentException("유효하지 않은 커서 형식입니다: " + cursor);
+                    }
                 }
                 default -> throw new IllegalArgumentException("유효하지 않은 정렬 기준입니다: " + query);
             }

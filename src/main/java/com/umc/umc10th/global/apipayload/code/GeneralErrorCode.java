@@ -20,6 +20,6 @@ public enum GeneralErrorCode implements BaseErrorCode {
 
     @Override
     public HttpStatus getStatus() {
-        return null;
+        return httpStatus;
     }
 }

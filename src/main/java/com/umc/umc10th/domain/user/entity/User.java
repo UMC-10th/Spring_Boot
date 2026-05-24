@@ -16,7 +16,9 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class User {
 
     @Id
@@ -24,13 +26,13 @@ public class User {
     @Column(name = "user_id")
     private Long id;
 
-    @Column(name = "id", nullable = false, length = 30)
+    @Column(name = "id", nullable = false, unique = true, length = 100)
     private String loginId;
 
-    @Column(name = "uuid", nullable = false, length = 30)
+    @Column(name = "uuid", nullable = false, length = 36)
     private String uuid;
 
-    @Column(name = "password", length = 20)
+    @Column(name = "password", length = 255)
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -61,6 +63,7 @@ public class User {
     @Column(name = "address", length = 100)
     private String address;
 
+    @Builder.Default
     @Column(name = "points", nullable = false)
     private Integer points = 0;
 
@@ -76,9 +79,11 @@ public class User {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserDoingMission> doingMissions = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
@@ -88,6 +93,7 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private NotificationSetting notificationSettings;
 
+    @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserPreference> preferences = new ArrayList<>();
 

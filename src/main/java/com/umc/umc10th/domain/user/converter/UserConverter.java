@@ -3,13 +3,35 @@ package com.umc.umc10th.domain.user.converter;
 import com.umc.umc10th.domain.mission.dto.response.MissionResponseDto;
 import com.umc.umc10th.domain.review.dto.response.ReviewResponseDto;
 import com.umc.umc10th.domain.review.entity.Review;
+import com.umc.umc10th.domain.user.dto.request.UserRequestDto;
+import com.umc.umc10th.domain.user.entity.User;
 import com.umc.umc10th.domain.user.entity.UserDoingMission;
+import com.umc.umc10th.domain.user.enums.Provider;
+import com.umc.umc10th.domain.user.enums.ServiceRole;
+import com.umc.umc10th.domain.user.enums.SystemRole;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Slice;
 
 import java.util.List;
+import java.util.UUID;
 
 public class UserConverter {
+
+    public static User toUser(UserRequestDto.CreateUser dto, String encodedPassword) {
+        return User.builder()
+                .loginId(dto.email())
+                .password(encodedPassword)
+                .uuid(UUID.randomUUID().toString())
+                .provider(dto.provider() != null ? dto.provider() : Provider.LOCAL)
+                .serviceRole(dto.serviceRole() != null ? dto.serviceRole() : ServiceRole.CUSTOMER)
+                .systemRole(SystemRole.ROLE_USER)
+                .name(dto.name())
+                .sex(dto.sex())
+                .birthday(dto.birthday())
+                .address(dto.address())
+                .phone(dto.phone())
+                .build();
+    }
 
     public static MissionResponseDto.GetMissionsPaged toGetMissionsPaged(
             Page<UserDoingMission> page) {

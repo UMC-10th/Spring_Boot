@@ -25,7 +25,7 @@ public class UserController {
         return ApiResponse.onSuccess(code, userService.getInfo());
     }
 
-    @GetMapping("/me/missions")
+    @PostMapping("/me/missions")
     public ApiResponse<MissionResponseDto.GetMissionsPaged> getMissions(
             @RequestParam Long locationId,
             @RequestParam(defaultValue = "10") Integer pageSize,
