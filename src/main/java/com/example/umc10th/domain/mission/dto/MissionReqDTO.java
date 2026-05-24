@@ -1,5 +1,12 @@
 package com.example.umc10th.domain.mission.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
+
+import java.time.LocalDate;
+
 public class MissionReqDTO {
 
 	public record MissionListRequest(
@@ -10,7 +17,27 @@ public class MissionReqDTO {
 	}
 
 	public record CompleteMission(
-			Boolean completed
+			@NotNull(message = "완료 여부는 필수입니다.") Boolean completed
 	) {
 	}
+
+	// 진행중인 미션 조회
+	public record InProgressMissionRequest(
+			@NotNull(message = "사용자 ID는 필수입니다.")
+			Long memberId,
+			@PositiveOrZero(message = "page는 0 이상이어야 합니다.")
+			Integer page,
+			@Positive(message = "size는 1 이상이어야 합니다.")
+			Integer size
+	) {}
+
+	// 가게 미션 생성
+	public record CreateMission(
+			@NotNull (message = "마감기한은 필수입니다.")
+			LocalDate deadline,
+			@NotNull(message = "미션 성공 포인트는 필수입니다.")
+			Integer point,
+			@NotBlank(message = "조건은 빈칸일 수 없습니다.")
+			String condition
+	){}
 }

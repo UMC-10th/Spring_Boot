@@ -38,4 +38,22 @@ public class ReviewResDTO {
 			List<ReviewSummary> reviews
 	) {
 	}
+
+	public record ReviewCard(
+			Long reviewId,
+			String nickname,
+			LocalDateTime createdAt,
+			Double starRate,
+			String content,
+			String reply
+	) {
+	}
+
+	public record CursorReviewList(
+			List<ReviewCard> reviews,
+			Long nextCursorId,
+			Double nextCursorStar,
+			Boolean hasNext
+	) {
+	}
 }

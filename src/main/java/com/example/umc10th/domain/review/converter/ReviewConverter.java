@@ -2,10 +2,11 @@ package com.example.umc10th.domain.review.converter;
 
 import com.example.umc10th.domain.review.dto.ReviewResDTO;
 import com.example.umc10th.domain.review.entity.Review;
-import com.example.umc10th.domain.store.entity.Store;
+import com.example.umc10th.domain.mission.entity.Store;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ReviewConverter {
 
@@ -16,19 +17,19 @@ public class ReviewConverter {
 		return new ReviewResDTO.StoreInfo(
 				store.getId(),
 				store.getName(),
-				null,
-				store.getLocation().getName().getDisplayName()
+				store.getFoodType().name(),
+				store.getLocation().getName().getDisplayName() + " " + store.getDetailAddress()
 		);
 	}
 
-	public static ReviewResDTO.CreateReview toCreateReviewResponse(Review review) {
+	public static ReviewResDTO.CreateReview toCreateReviewResponse(Review review, List<String> photoUrls) {
 		return new ReviewResDTO.CreateReview(
 				review.getId(),
 				review.getStore().getId(),
 				review.getMember().getId(),
 				review.getStar().doubleValue(),
 				review.getContent(),
-				List.of(),
+				photoUrls,
 				review.getCreatedAt()
 		);
 	}
@@ -50,5 +51,34 @@ public class ReviewConverter {
 				.toList();
 
 		return new ReviewResDTO.MyReviews(reviews);
+	}
+
+	public static ReviewResDTO.ReviewCard toReviewCard(Review review) {
+		String replyContent = review.getReply() != null ? review.getReply().getContent() : null;
+
+		return new ReviewResDTO.ReviewCard(
+				review.getId(),
+				review.getMember().getNickname(),
+				review.getCreatedAt(),
+				review.getStar().doubleValue(),
+				review.getContent(),
+				replyContent
+		);
+	}
+
+	public static ReviewResDTO.CursorReviewList toCursorReviewList(
+			List<Review> reviews, int size
+	) {
+		boolean hasNext = reviews.size() > size;
+		List<Review> sliced = hasNext ? reviews.subList(0, size) : reviews;
+
+		List<ReviewResDTO.ReviewCard> cards = sliced.stream()
+				.map(ReviewConverter::toReviewCard)
+				.collect(Collectors.toList());
+
+		Long nextCursorId = hasNext ? sliced.get(sliced.size() - 1).getId() : null;
+		Double nextCursorStar = hasNext ? sliced.get(sliced.size() - 1).getStar().doubleValue() : null;
+
+		return new ReviewResDTO.CursorReviewList(cards, nextCursorId, nextCursorStar, hasNext);
 	}
 }

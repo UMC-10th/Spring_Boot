@@ -1,6 +1,6 @@
-package com.example.umc10th.domain.location.entity;
+package com.example.umc10th.domain.mission.entity;
 
-import com.example.umc10th.domain.member.enums.Address;
+import com.example.umc10th.global.enums.Address;
 import com.example.umc10th.global.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;

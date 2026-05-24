@@ -1,4 +1,4 @@
-package com.example.umc10th.domain.member.enums;
+package com.example.umc10th.global.enums;
 
 public enum Address {
     NONE("선택 안 함"),
