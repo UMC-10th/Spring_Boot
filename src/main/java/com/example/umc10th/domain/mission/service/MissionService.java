@@ -87,6 +87,9 @@ public class MissionService {
 
 	// 진행중인 미션 조회
 	public MissionResDTO.MissionList getInProgressMissions(MissionReqDTO.InProgressMissionRequest request) {
+		memberRepository.findById(request.memberId())
+				.orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+
 		int p = request.page() == null ? 0 : request.page();
 		int s = request.size() == null ? 10 : request.size();
 
