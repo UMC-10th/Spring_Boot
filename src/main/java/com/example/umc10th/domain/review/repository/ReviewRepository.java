@@ -18,6 +18,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     // 커서 기반 - ID순
     @Query("SELECT r FROM Review r " +
+            "JOIN FETCH r.member " +
+            "LEFT JOIN FETCH r.reply " +
             "WHERE r.member.id = :memberId " +
             "AND (:cursorId IS NULL OR r.id < :cursorId) " +
             "ORDER BY r.id DESC")
@@ -29,6 +31,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     // 커서 기반 - 별점순 (동점이면 id DESC)
     @Query("SELECT r FROM Review r " +
+            "JOIN FETCH r.member " +
+            "LEFT JOIN FETCH r.reply " +
             "WHERE r.member.id = :memberId " +
             "AND (:cursorStar IS NULL OR r.star < :cursorStar " +
             "     OR (r.star = :cursorStar AND r.id < :cursorId)) " +
