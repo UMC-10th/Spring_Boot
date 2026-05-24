@@ -4,6 +4,7 @@ import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class ReviewReqDTO {
 	public record CursorReviewRequest(
 			@NotNull(message = "회원 ID는 필수입니다.")
 			Long memberId,
+			@Positive(message = "size는 1 이상이어야 합니다.")
 			Integer size,
 			String sortType,
 			Long cursorId,
