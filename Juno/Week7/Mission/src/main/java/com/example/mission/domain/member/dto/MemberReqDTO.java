@@ -1,0 +1,4 @@
+package com.example.mission.domain.member.dto;
+
+public class MemberReqDTO {
+}
