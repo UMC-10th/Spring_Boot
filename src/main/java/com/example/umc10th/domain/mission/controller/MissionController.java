@@ -7,7 +7,10 @@ import com.example.umc10th.domain.mission.service.MissionService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
 import com.example.umc10th.global.apiPayload.code.GeneralSuccessCode;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -18,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Validated
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
@@ -73,8 +77,8 @@ public class MissionController {
 	@GetMapping("/stores/{storeId}/missions")
 	public ApiResponse<MissionResDTO.StoreMissionList> getStoreMissions(
 			@PathVariable Long storeId,
-			@RequestParam(required = false) Integer page,
-			@RequestParam(required = false) Integer size
+			@RequestParam(required = false) @PositiveOrZero(message = "page는 0 이상이어야 합니다.") Integer page,
+			@RequestParam(required = false) @Positive(message = "size는 1 이상이어야 합니다.") Integer size
 	) {
 		return ApiResponse.onSuccess(
 				MissionSuccessCode.STORE_MISSION_LIST_SUCCESS,
