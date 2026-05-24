@@ -8,6 +8,7 @@ import com.example.umc10th.domain.member.exception.MemberException;
 import com.example.umc10th.domain.member.exception.code.MemberErrorCode;
 import com.example.umc10th.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,11 +18,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public MemberResDTO.JoinResultDTO joinMember(MemberReqDTO.JoinDTO request) {
 
-        Member member = MemberConverter.toMember(request);
+        String encodedPassword = passwordEncoder.encode(request.password());
+        Member member = MemberConverter.toMember(request, encodedPassword);
 
         Member savedMember = memberRepository.save(member);
 
