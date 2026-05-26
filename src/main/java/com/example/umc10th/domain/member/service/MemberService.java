@@ -25,6 +25,7 @@ import com.example.umc10th.domain.mission.repository.MemberMissionRepository;
 import com.example.umc10th.domain.mission.repository.MissionRepository;
 import com.example.umc10th.global.enums.Address;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,7 @@ public class MemberService {
     private final MemberTermRepository memberTermRepository;
     private final MemberMissionRepository memberMissionRepository;
     private final MissionRepository missionRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public MemberResDTO.MyPage getMyPage() {
         Member member = memberRepository.findById(CURRENT_MEMBER_ID)
@@ -55,10 +57,15 @@ public class MemberService {
 
     @Transactional
     public MemberResDTO.SignUp signUp(MemberReqDTO.SignUp dto) {
+        if (memberRepository.existsByEmail(dto.email())) {
+            throw new MemberException(MemberErrorCode.MEMBER_EMAIL_DUPLICATED);
+        }
+
         Member member = Member.builder()
                 .name(dto.name())
                 .nickname(dto.nickname())
                 .email(dto.email())
+                .password(passwordEncoder.encode(dto.password()))
                 .socialUid(dto.email())
                 .socialType(SocialType.KAKAO)
                 .gender(parseGender(dto.gender()))
