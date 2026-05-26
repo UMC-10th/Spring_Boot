@@ -1,19 +1,25 @@
 package com.example.Spring_Boot.global.security.handler;
 
-import com.example.Spring_Boot.global.apiPayload.ApiResponse;
-import com.example.Spring_Boot.global.apiPayload.code.BaseErrorCode;
-import com.example.Spring_Boot.global.apiPayload.code.GeneralErrorCode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
+
+    private final HandlerExceptionResolver handlerExceptionResolver;
+
+    public CustomAuthenticationEntryPoint(
+            @Qualifier("handlerExceptionResolver") HandlerExceptionResolver handlerExceptionResolver
+    ) {
+        this.handlerExceptionResolver = handlerExceptionResolver;
+    }
 
     @Override
     public void commence(
@@ -21,13 +27,6 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             HttpServletResponse response,
             AuthenticationException authException
     ) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        BaseErrorCode code = GeneralErrorCode.UNAUTHORIZED;
-
-        response.setContentType("application/json;charset=UTF-8");
-        response.setStatus(code.getStatus().value());
-
-        ApiResponse<Void> errorResponse = ApiResponse.onFailure(code, null);
-        objectMapper.writeValue(response.getOutputStream(), errorResponse);
+        handlerExceptionResolver.resolveException(request, response, null, authException);
     }
 }
