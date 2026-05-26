@@ -11,7 +11,10 @@ public class MemberResDTO {
     @Builder
     public record CreateMemberResponse(
             Long userId,
+            String email,
             String name,
+            String nickname,
+            String phoneNumber,
             Gender gender,
             LocalDate birth,
             String address,
