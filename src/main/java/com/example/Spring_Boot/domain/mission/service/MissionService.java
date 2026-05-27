@@ -10,6 +10,7 @@ import com.example.Spring_Boot.domain.mission.exception.code.MissionErrorCode;
 import com.example.Spring_Boot.domain.mission.repository.UserMissionRepository;
 import com.example.Spring_Boot.domain.store.entity.Category;
 import com.example.Spring_Boot.domain.store.repository.CategoryRepository;
+import com.example.Spring_Boot.global.security.auth.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -81,6 +82,11 @@ public class MissionService {
     }
 
     private Long extractMemberId(String authorization) {
+        return SecurityUtil.getCurrentMemberId()
+                .orElseGet(() -> extractMemberIdFromAuthorization(authorization));
+    }
+
+    private Long extractMemberIdFromAuthorization(String authorization) {
         if (authorization == null || authorization.isBlank()) {
             throw new MissionException(MissionErrorCode.INVALID_AUTHORIZATION);
         }

@@ -81,4 +81,9 @@ public class Member {
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
+
+    public void linkSocialAccount(SocialType socialProvider, String socialUid) {
+        this.socialProvider = socialProvider;
+        this.socialUid = socialUid;
+    }
 }

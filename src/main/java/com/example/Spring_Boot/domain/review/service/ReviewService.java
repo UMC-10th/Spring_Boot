@@ -12,6 +12,7 @@ import com.example.Spring_Boot.domain.review.exception.code.ReviewErrorCode;
 import com.example.Spring_Boot.domain.review.repository.ReviewRepository;
 import com.example.Spring_Boot.domain.store.entity.Store;
 import com.example.Spring_Boot.domain.store.repository.StoreRepository;
+import com.example.Spring_Boot.global.security.auth.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -72,6 +73,11 @@ public class ReviewService {
     }
 
     private Long extractMemberId(String authorization) {
+        return SecurityUtil.getCurrentMemberId()
+                .orElseGet(() -> extractMemberIdFromAuthorization(authorization));
+    }
+
+    private Long extractMemberIdFromAuthorization(String authorization) {
         if (authorization == null || authorization.isBlank()) {
             throw new ReviewException(ReviewErrorCode.INVALID_AUTHORIZATION);
         }

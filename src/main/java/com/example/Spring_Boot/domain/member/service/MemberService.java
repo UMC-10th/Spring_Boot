@@ -7,6 +7,7 @@ import com.example.Spring_Boot.domain.member.entity.Member;
 import com.example.Spring_Boot.domain.member.exception.MemberException;
 import com.example.Spring_Boot.domain.member.exception.code.MemberErrorCode;
 import com.example.Spring_Boot.domain.member.repository.MemberRepository;
+import com.example.Spring_Boot.global.security.auth.AuthMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,11 +21,12 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly = true)
-    public MemberResDTO.MyPageResponse getMyPage(String authorization) {
-        Member member = memberRepository.findById(extractMemberId(authorization))
-                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+    public MemberResDTO.MyPageResponse getMyPage(AuthMember authMember) {
+        if (authMember == null) {
+            throw new MemberException(MemberErrorCode.INVALID_AUTHORIZATION);
+        }
 
-        return MemberConverter.toMyPageResponse(member);
+        return MemberConverter.toMyPageResponse(authMember.getMember());
     }
 
     @Transactional
@@ -40,15 +42,4 @@ public class MemberService {
         return MemberConverter.toCreateMemberResponse(savedMember, request.categoryIds());
     }
 
-    private Long extractMemberId(String authorization) {
-        if (authorization == null || authorization.isBlank()) {
-            throw new MemberException(MemberErrorCode.INVALID_AUTHORIZATION);
-        }
-
-        try {
-            return Long.parseLong(authorization.replace("Bearer", "").trim());
-        } catch (NumberFormatException e) {
-            throw new MemberException(MemberErrorCode.INVALID_AUTHORIZATION);
-        }
-    }
 }
