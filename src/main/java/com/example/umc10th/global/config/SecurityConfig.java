@@ -2,6 +2,8 @@ package com.example.umc10th.global.config;
 
 import com.example.umc10th.global.security.exception.CustomAccessDenied;
 import com.example.umc10th.global.security.exception.CustomEntryPoint;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,10 +12,15 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @EnableWebSecurity
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    @Qualifier("handlerExceptionResolver")
+    private final HandlerExceptionResolver handlerExceptionResolver;
 
     private final String[] allowUris = {
             // Swagger 허용
@@ -56,11 +63,12 @@ public class SecurityConfig {
 
     @Bean
     public CustomAccessDenied customAccessDenied() {
-        return new CustomAccessDenied();
+        return new CustomAccessDenied(handlerExceptionResolver);
     }
 
     @Bean
     public CustomEntryPoint customEntryPoint() {
-        return new CustomEntryPoint();
+        return new CustomEntryPoint(handlerExceptionResolver);
     }
 }
+

@@ -1,35 +1,23 @@
 package com.example.umc10th.global.security.exception;
 
-import com.example.umc10th.global.apiPayload.ApiResponse;
-import com.example.umc10th.global.apiPayload.code.BaseErrorCode;
-import com.example.umc10th.global.apiPayload.code.GeneralErrorCode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
-import java.io.IOException;
-
+@RequiredArgsConstructor
 public class CustomAccessDenied implements AccessDeniedHandler {
+
+    private final HandlerExceptionResolver handlerExceptionResolver;
 
     @Override
     public void handle(
             HttpServletRequest request,
             HttpServletResponse response,
             AccessDeniedException accessDeniedException
-    ) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        BaseErrorCode code = GeneralErrorCode.FORBIDDEN;
-
-        // 응답 Content-Type, HTTP 상태코드 정의
-        response.setContentType("application/json;charset=UTF-8");
-        response.setStatus(code.getStatus().value());
-
-        // Response Body에 응답통일한 객체를 넣기
-        ApiResponse<Void> errorResponse = ApiResponse.<Void>onFailureEntity(code, null).getBody();
-
-        // 실제 Response로 덮어쓰기
-        objectMapper.writeValue(response.getOutputStream(), errorResponse);
+    ) {
+        handlerExceptionResolver.resolveException(request, response, null, accessDeniedException);
     }
 }
