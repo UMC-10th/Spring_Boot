@@ -14,6 +14,7 @@ public class UserResDTO {
     public static class JoinResultDTO {
         private Long userId;
         private String name;
+        private String email;
     }
 
     @Getter
