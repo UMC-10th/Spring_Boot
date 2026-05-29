@@ -6,6 +6,8 @@ import com.example.umc10th.global.apiPayload.code.GeneralErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -24,6 +26,20 @@ public class GlobalExceptionHandler {
         log.error("Custom Exception: {}", errorCode.getMessage());
 
         return ApiResponse.onFailureEntity(errorCode);
+    }
+
+    // Security 인증 예외 (401)
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiResponse<Void>> handleAuthenticationException(AuthenticationException e) {
+        log.error("Authentication Exception: {}", e.getMessage());
+        return ApiResponse.onFailureEntity(GeneralErrorCode.UNAUTHORIZED);
+    }
+
+    // Security 인가 예외 (403)
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleAccessDeniedException(AccessDeniedException e) {
+        log.error("Access Denied Exception: {}", e.getMessage());
+        return ApiResponse.onFailureEntity(GeneralErrorCode.FORBIDDEN);
     }
 
     // Validation 예외 처리 (MethodArgumentNotValidException)
@@ -57,3 +73,4 @@ public class GlobalExceptionHandler {
         return ApiResponse.onFailureEntity(GeneralErrorCode.INTERNAL_SERVER_ERROR);
     }
 }
+

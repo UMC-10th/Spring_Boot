@@ -1,7 +1,7 @@
 package com.example.umc10th.domain.mission.service;
 
 import com.example.umc10th.domain.member.entity.Member;
-import com.example.umc10th.domain.member.repository.MemberRespository;
+import com.example.umc10th.domain.member.repository.MemberRepository;
 import com.example.umc10th.domain.mission.converter.MissionConverter;
 import com.example.umc10th.domain.mission.dto.MissionReqDTO;
 import com.example.umc10th.domain.mission.dto.MissionResDTO;
@@ -31,7 +31,7 @@ public class MissionService {
 
     private final MissionRespository missionRepository;
     private final MemberMissionRepository memberMissionRepository;
-    private final MemberRespository memberRepository;
+    private final MemberRepository memberRepository;
     private final StoreRepository storeRepository;
 
     // 홈 화면

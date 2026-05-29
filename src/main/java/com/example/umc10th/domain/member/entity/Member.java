@@ -47,10 +47,13 @@ public class Member extends BaseEntity {
     @Column(name = "detail_address", nullable = false)
     private String detailAddress;
 
-    @Column(name = "social_uid", nullable = false)
+    @Column(name = "password", nullable = false)
+    private String password;
+
+    @Column(name = "social_uid")
     private String socialUid;
 
-    @Column(name = "social_type", nullable = false)
+    @Column(name = "social_type")
     @Enumerated(EnumType.STRING)
     private SocialType socialType;
 

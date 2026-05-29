@@ -1,8 +1,7 @@
 package com.example.umc10th.domain.review.service;
 
 import com.example.umc10th.domain.member.entity.Member;
-import com.example.umc10th.domain.member.repository.MemberRespository;
-import com.example.umc10th.domain.mission.entity.Mission;
+import com.example.umc10th.domain.member.repository.MemberRepository;
 import com.example.umc10th.domain.mission.entity.Store;
 import com.example.umc10th.domain.mission.repository.StoreRepository;
 import com.example.umc10th.domain.review.converter.ReviewConverter;
@@ -28,7 +27,7 @@ import java.util.List;
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
-    private final MemberRespository memberRepository;
+    private final MemberRepository memberRepository;
     private final StoreRepository storeRepository;
 
     // 리뷰 작성
