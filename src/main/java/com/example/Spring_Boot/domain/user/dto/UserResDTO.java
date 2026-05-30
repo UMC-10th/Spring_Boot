@@ -21,6 +21,14 @@ public class UserResDTO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    public static class LoginResultDTO {
+        private String accessToken;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class MyPageDTO {
         private Long userId;
         private String name;
