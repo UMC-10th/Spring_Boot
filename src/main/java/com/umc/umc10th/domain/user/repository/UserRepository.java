@@ -15,4 +15,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
             WHERE u.id = :userId
             """)
     Optional<User> findUserInfo(@Param("userId") Long userId);
+
+    Optional<User> findByLoginId(String loginId);
+
+    boolean existsByLoginId(String loginId);
 }

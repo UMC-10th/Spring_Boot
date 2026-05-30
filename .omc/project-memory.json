@@ -1,0 +1,345 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1779538463568,
+  "projectRoot": "/Users/shin-yujin/Desktop/UMC/umc10th",
+  "techStack": {
+    "languages": [
+      {
+        "name": "Java/Kotlin",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "build.gradle"
+        ]
+      }
+    ],
+    "frameworks": [],
+    "packageManager": "gradle",
+    "runtime": null
+  },
+  "build": {
+    "buildCommand": null,
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": null,
+    "scripts": {}
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": null,
+    "testPattern": null,
+    "fileOrganization": null
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "bin",
+      "src"
+    ],
+    "gitBranches": {
+      "defaultBranch": "main",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "bin": {
+      "path": "bin",
+      "purpose": "Executable scripts",
+      "fileCount": 0,
+      "lastAccessed": 1779538463562,
+      "keyFiles": []
+    },
+    "build": {
+      "path": "build",
+      "purpose": "Build output",
+      "fileCount": 0,
+      "lastAccessed": 1779538463563,
+      "keyFiles": []
+    },
+    "gradle": {
+      "path": "gradle",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1779538463563,
+      "keyFiles": []
+    },
+    "src": {
+      "path": "src",
+      "purpose": "Source code",
+      "fileCount": 0,
+      "lastAccessed": 1779538463564,
+      "keyFiles": []
+    },
+    "bin/test": {
+      "path": "bin/test",
+      "purpose": "Test files",
+      "fileCount": 0,
+      "lastAccessed": 1779538463564,
+      "keyFiles": []
+    },
+    "src/test": {
+      "path": "src/test",
+      "purpose": "Test files",
+      "fileCount": 0,
+      "lastAccessed": 1779538463565,
+      "keyFiles": []
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/user/controller/UserController.java",
+      "accessCount": 6,
+      "lastAccessed": 1779601161395,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/user/service/UserService.java",
+      "accessCount": 6,
+      "lastAccessed": 1779602172842,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/user/entity/User.java",
+      "accessCount": 6,
+      "lastAccessed": 1779602314072,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/user/converter/UserConverter.java",
+      "accessCount": 5,
+      "lastAccessed": 1779602172343,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/user/controller/UserAuthController.java",
+      "accessCount": 4,
+      "lastAccessed": 1779602171841,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/user/dto/request/UserRequestDto.java",
+      "accessCount": 4,
+      "lastAccessed": 1779602222913,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/global/apipayload/code/GeneralErrorCode.java",
+      "accessCount": 3,
+      "lastAccessed": 1779601453594,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/global/apipayload/handler/GeneralExceptionAdvice.java",
+      "accessCount": 3,
+      "lastAccessed": 1779601563249,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/user/repository/UserRepository.java",
+      "accessCount": 3,
+      "lastAccessed": 1779601792705,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/user/enums/ServiceRole.java",
+      "accessCount": 3,
+      "lastAccessed": 1779601826203,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/user/exception/code/UserErrorCode.java",
+      "accessCount": 3,
+      "lastAccessed": 1779602223874,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/user/exception/UserException.java",
+      "accessCount": 3,
+      "lastAccessed": 1779602224176,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/user/enums/SystemRole.java",
+      "accessCount": 2,
+      "lastAccessed": 1779601670600,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/user/enums/Provider.java",
+      "accessCount": 2,
+      "lastAccessed": 1779601694834,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/global/security/AuthUser.java",
+      "accessCount": 2,
+      "lastAccessed": 1779602219039,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/global/security/CustomUserDetailsService.java",
+      "accessCount": 2,
+      "lastAccessed": 1779602220184,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/global/security/handler/CustomAccessDenied.java",
+      "accessCount": 2,
+      "lastAccessed": 1779602220683,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/global/security/handler/CustomEntryPoint.java",
+      "accessCount": 2,
+      "lastAccessed": 1779602221198,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/global/config/SecurityConfig.java",
+      "accessCount": 2,
+      "lastAccessed": 1779602222290,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/mission/controller/MissionController.java",
+      "accessCount": 1,
+      "lastAccessed": 1779538514621,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/notification/controller/NotificationController.java",
+      "accessCount": 1,
+      "lastAccessed": 1779538515847,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/question/controller/QuestionController.java",
+      "accessCount": 1,
+      "lastAccessed": 1779538515878,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/review/controller/ReviewController.java",
+      "accessCount": 1,
+      "lastAccessed": 1779538516444,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/store/controller/StoreController.java",
+      "accessCount": 1,
+      "lastAccessed": 1779538516917,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/mission/service/MissionService.java",
+      "accessCount": 1,
+      "lastAccessed": 1779538525590,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/review/service/ReviewService.java",
+      "accessCount": 1,
+      "lastAccessed": 1779538525840,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/mission/dto/request/MissionRequestDto.java",
+      "accessCount": 1,
+      "lastAccessed": 1779538526955,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/mission/dto/response/MissionResponseDto.java",
+      "accessCount": 1,
+      "lastAccessed": 1779538527940,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/review/dto/request/ReviewRequestDto.java",
+      "accessCount": 1,
+      "lastAccessed": 1779538528485,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/review/dto/response/ReviewResponseDto.java",
+      "accessCount": 1,
+      "lastAccessed": 1779538528875,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/user/dto/response/UserResponseDto.java",
+      "accessCount": 1,
+      "lastAccessed": 1779538530192,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/review/repository/ReviewRepository.java",
+      "accessCount": 1,
+      "lastAccessed": 1779538548764,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/user/repository/UserDoingMissionRepository.java",
+      "accessCount": 1,
+      "lastAccessed": 1779538549664,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/mission/repository/MissionRepository.java",
+      "accessCount": 1,
+      "lastAccessed": 1779538549829,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/store/repository/StoreRepository.java",
+      "accessCount": 1,
+      "lastAccessed": 1779538551139,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/user/entity/UserDoingMission.java",
+      "accessCount": 1,
+      "lastAccessed": 1779538553197,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/review/entity/Review.java",
+      "accessCount": 1,
+      "lastAccessed": 1779538553367,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/domain/review/enums/Stars.java",
+      "accessCount": 1,
+      "lastAccessed": 1779538701526,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/global/apipayload/ApiResponse.java",
+      "accessCount": 1,
+      "lastAccessed": 1779601454603,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/global/config/SwaggerConfig.java",
+      "accessCount": 1,
+      "lastAccessed": 1779601522913,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/global/apipayload/code/BaseErrorCode.java",
+      "accessCount": 1,
+      "lastAccessed": 1779601524321,
+      "type": "file"
+    },
+    {
+      "path": "src/main/java/com/umc/umc10th/global/apipayload/exception/ProjectException.java",
+      "accessCount": 1,
+      "lastAccessed": 1779601572760,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}
