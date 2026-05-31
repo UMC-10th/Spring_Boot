@@ -33,7 +33,7 @@ public class ReviewService {
     // 리뷰 작성
     public ReviewResDTO.CreateReview createReview(Long storeId, ReviewReqDTO.CreateReview dto) {
 
-        Member member = memberRepository.findById(Math.toIntExact(dto.memberId()))
+        Member member = memberRepository.findById(dto.memberId())
                 .orElseThrow(() -> new RuntimeException(GeneralErrorCode.NOT_FOUND.getMessage()));
 
         Store store = storeRepository.findById(storeId)

@@ -18,6 +18,10 @@ public enum MemberSuccessCode implements BaseSuccessCode {
             "MEMBER200_2",
             "마이페이지 정보를 성공적으로 조회했습니다."),
 
+    LOGIN_OK(HttpStatus.OK,
+            "MEMBER200_3",
+            "로그인이 성공적으로 완료되었습니다."),
+
     SIGNUP_OK(HttpStatus.CREATED,
             "MEMBER201_1",
             "회원가입이 성공적으로 완료되었습니다."),

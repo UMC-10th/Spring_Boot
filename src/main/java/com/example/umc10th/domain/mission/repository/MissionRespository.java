@@ -13,7 +13,7 @@ import java.util.List;
 public interface MissionRespository extends JpaRepository<Mission, Long> {
 
     @EntityGraph(attributePaths = "store")
-    Page<Mission> findByStore_Location_Id(Integer locationId, Pageable pageable);
+    Page<Mission> findByStore_Location_Id(Long locationId, Pageable pageable);
 
     List<Mission> findAllByStore_Id(Long storeId);
 
