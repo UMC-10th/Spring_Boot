@@ -1,24 +1,23 @@
 package umc.domain.user.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 import umc.domain.user.dto.request.UserRequestDto;
 import umc.domain.user.dto.response.UserResponseDto;
+import umc.domain.user.entity.User;
 import umc.global.apiPayload.ApiResponse;
 import umc.global.apiPayload.code.status.GeneralSuccessCode;
+import umc.global.security.entity.AuthUser; // JWT 인증 객체 임포트 추가
 
 import java.time.LocalDateTime;
-
 
 @RestController
 @RequiredArgsConstructor
 public class UserController {
 
-    // 회원가입
-    @PostMapping("/auth/signup")
+    // 1. 회원가입
+    @PostMapping("/sign-up")
     public ApiResponse<UserResponseDto.SignUpResultDto> signUp(@RequestBody UserRequestDto.SignUpDto request) {
         UserResponseDto.SignUpResultDto dummyResponse = UserResponseDto.SignUpResultDto.builder()
                 .userId(1L)
@@ -27,12 +26,25 @@ public class UserController {
         return ApiResponse.onSuccess(GeneralSuccessCode.OK, dummyResponse);
     }
 
-    // 홈 화면
+    // 2. 홈 화면
     @GetMapping("/home")
     public ApiResponse<UserResponseDto.HomeResultDto> getHome() {
         UserResponseDto.HomeResultDto dummyResponse = UserResponseDto.HomeResultDto.builder()
-                .welcomeMessage("홈 화면")
                 .build();
         return ApiResponse.onSuccess(GeneralSuccessCode.OK, dummyResponse);
+    }
+
+    @GetMapping("/me")
+    public ApiResponse<UserResponseDto.HomeResultDto> getMyInfo(
+            @AuthenticationPrincipal AuthUser authUser
+    ) {
+        User user = authUser.getUser();
+
+        UserResponseDto.HomeResultDto result = UserResponseDto.HomeResultDto.builder()
+                .name(user.getName())
+                .email(user.getEmail())
+                .build();
+
+        return ApiResponse.onSuccess(GeneralSuccessCode.OK, result);
     }
 }

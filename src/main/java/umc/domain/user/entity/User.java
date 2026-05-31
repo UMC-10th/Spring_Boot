@@ -2,6 +2,7 @@ package umc.domain.user.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import umc.domain.user.entity.mapping.SocialType;
 import umc.global.common.BaseEntity;
 
 @Entity
@@ -18,4 +19,17 @@ public class User extends BaseEntity {
     @Column(nullable = false, length = 20)
     private String name;
 
+
+    private String email;
+
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    private SocialType socialType;
+
+    private String socialUid;
+
+    public void encodePassword(String encodedPassword) {
+        this.password = encodedPassword;
+    }
 }
