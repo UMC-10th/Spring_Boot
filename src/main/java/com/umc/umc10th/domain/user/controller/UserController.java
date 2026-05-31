@@ -8,8 +8,10 @@ import com.umc.umc10th.domain.user.dto.response.UserResponseDto;
 import com.umc.umc10th.domain.user.service.UserService;
 import com.umc.umc10th.global.apipayload.ApiResponse;
 import com.umc.umc10th.global.apipayload.code.BaseSuccessCode;
+import com.umc.umc10th.global.security.AuthUser;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,9 +22,8 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/me")
-    public ApiResponse<UserResponseDto.GetInfo> getInfo() {
-        BaseSuccessCode code = UserSuccessCode.OK;
-        return ApiResponse.onSuccess(code, userService.getInfo());
+    public ApiResponse<UserResponseDto.GetInfo> getInfo(@AuthenticationPrincipal AuthUser authUser) {
+        return ApiResponse.onSuccess(UserSuccessCode.OK, userService.getInfo(authUser));
     }
 
     @PostMapping("/me/missions")

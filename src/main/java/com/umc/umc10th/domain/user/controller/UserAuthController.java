@@ -2,6 +2,7 @@ package com.umc.umc10th.domain.user.controller;
 
 import com.umc.umc10th.domain.user.apipayload.code.UserSuccessCode;
 import com.umc.umc10th.domain.user.dto.request.UserRequestDto;
+import com.umc.umc10th.domain.user.dto.response.UserResponseDto;
 import com.umc.umc10th.domain.user.service.UserService;
 import com.umc.umc10th.global.apipayload.ApiResponse;
 import com.umc.umc10th.global.apipayload.code.BaseSuccessCode;
@@ -21,5 +22,10 @@ public class UserAuthController {
         BaseSuccessCode code = UserSuccessCode.OK;
         userService.createUser(dto);
         return ApiResponse.onSuccess(code);
+    }
+
+    @PostMapping("/login")
+    public ApiResponse<UserResponseDto.Login> login(@Valid @RequestBody UserRequestDto.Login dto) {
+        return ApiResponse.onSuccess(UserSuccessCode.OK, userService.login(dto));
     }
 }

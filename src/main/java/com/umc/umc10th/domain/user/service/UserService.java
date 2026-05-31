@@ -14,6 +14,8 @@ import com.umc.umc10th.domain.user.exception.UserException;
 import com.umc.umc10th.domain.user.exception.code.UserErrorCode;
 import com.umc.umc10th.domain.user.repository.UserDoingMissionRepository;
 import com.umc.umc10th.domain.user.repository.UserRepository;
+import com.umc.umc10th.global.security.AuthUser;
+import com.umc.umc10th.global.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -34,9 +36,8 @@ public class UserService {
     private final UserDoingMissionRepository userDoingMissionRepository;
     private final ReviewRepository reviewRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
-    // 임시 인증 유저 ID - 실제로는 SecurityContextHolder 등에서 추출
-    private static final Long TEMP_USER_ID = 1L;
     private static final int PAGE_SIZE = 10;
 
     @Transactional
@@ -48,10 +49,18 @@ public class UserService {
         userRepository.save(UserConverter.toUser(dto, encodedPassword));
     }
 
-    public UserResponseDto.GetInfo getInfo() {
-        User user = userRepository.findUserInfo(TEMP_USER_ID)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 유저입니다."));
+    public UserResponseDto.Login login(UserRequestDto.Login dto) {
+        User user = userRepository.findByLoginId(dto.email())
+                .orElseThrow(() -> new UserException(UserErrorCode.INVALID_PASSWORD));
+        if (!passwordEncoder.matches(dto.password(), user.getPassword())) {
+            throw new UserException(UserErrorCode.INVALID_PASSWORD);
+        }
+        String token = jwtUtil.createAccessToken(new AuthUser(user));
+        return new UserResponseDto.Login(token);
+    }
 
+    public UserResponseDto.GetInfo getInfo(AuthUser authUser) {
+        User user = authUser.getUser();
         return UserResponseDto.GetInfo.builder()
                 .nickname(user.getName())
                 .email(user.getLoginId())
@@ -60,9 +69,9 @@ public class UserService {
                 .build();
     }
 
-    public MissionResponseDto.GetMissions getMissions(Long locationId, String status) {
+    public MissionResponseDto.GetMissions getMissions(Long locationId, String status, AuthUser authUser) {
         Pageable pageable = PageRequest.of(0, PAGE_SIZE);
-        Page<UserDoingMission> page = userDoingMissionRepository.findMyMissions(TEMP_USER_ID, status, pageable);
+        Page<UserDoingMission> page = userDoingMissionRepository.findMyMissions(authUser.getUser().getId(), status, pageable);
 
         List<MissionResponseDto.GetMissions.GetMission> items = page.getContent().stream()
                 .map(udm -> MissionResponseDto.GetMissions.GetMission.builder()
@@ -77,9 +86,9 @@ public class UserService {
                 .build();
     }
 
-    public ReviewResponseDto.GetMyReviews getMyReviews() {
+    public ReviewResponseDto.GetMyReviews getMyReviews(AuthUser authUser) {
         Pageable pageable = PageRequest.of(0, PAGE_SIZE);
-        Page<Review> page = reviewRepository.findMyReviews(TEMP_USER_ID, pageable);
+        Page<Review> page = reviewRepository.findMyReviews(authUser.getUser().getId(), pageable);
 
         List<ReviewResponseDto.GetMyReviews.ReviewItem> items = page.getContent().stream()
                 .map(r -> ReviewResponseDto.GetMyReviews.ReviewItem.builder()
