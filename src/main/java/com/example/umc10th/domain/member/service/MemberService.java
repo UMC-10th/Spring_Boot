@@ -15,6 +15,8 @@ import com.example.umc10th.domain.member.repository.MemberRepository;
 import com.example.umc10th.domain.member.repository.TermRepository;
 import com.example.umc10th.domain.mission.entity.mapping.MemberMission;
 import com.example.umc10th.domain.mission.repository.MemberMissionRepository;
+import com.example.umc10th.global.security.AuthMember;
+import com.example.umc10th.global.security.util.JwtUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +39,7 @@ public class MemberService {
     private final FoodRepository foodRepository;
     private final TermRepository termRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     @PersistenceContext
     private EntityManager em; // MemberFood/MemberTerm을 직접 persist하기 위해
@@ -101,9 +104,7 @@ public class MemberService {
     }
 
     // 마이페이지
-    public MemberResDTO.MyPage getMyPage(Long memberId) {
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+    public MemberResDTO.MyPage getMyPage(Member member) {
         return MemberConverter.toMyPage(member);
     }
 
@@ -124,5 +125,23 @@ public class MemberService {
 
         // 4. 컨버터로 변환
         return MemberConverter.toHome(member, received, completed, inProgress, missionPage);
+    }
+
+    // 로그인
+    @Transactional(readOnly = true)
+    public MemberResDTO.Login login(MemberReqDTO.Login request) {
+        // 1. 이메일로 회원 조회
+        Member member = memberRepository.findByEmail(request.email())
+                .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
+
+        // 2. 비밀번호 검증 (입력 평문 vs DB 암호문)
+        if (!passwordEncoder.matches(request.password(), member.getPassword())) {
+            throw new MemberException(MemberErrorCode.PASSWORD_NOT_MATCH);
+        }
+
+        // 3. JWT 발급
+        String accessToken = jwtUtil.createAccessToken(new AuthMember(member));
+
+        return MemberConverter.toLogin(accessToken);
     }
 }

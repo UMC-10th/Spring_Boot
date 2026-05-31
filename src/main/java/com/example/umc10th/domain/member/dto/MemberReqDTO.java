@@ -60,5 +60,16 @@ public class MemberReqDTO {
 
             @NotEmpty(message = "필수 약관 동의가 필요합니다.")
             List<String> agreedTerms // ["AGE", "SERVICE", "PRIVACY"]
+    ) {
+    }
+
+    @Builder
+    public record Login(
+            @NotBlank(message = "이메일은 필수입니다.")
+            @Email(message = "이메일 형식이 올바르지 않습니다.")
+            String email,
+
+            @NotBlank(message = "비밀번호는 필수입니다.")
+            String password
     ) {}
 }

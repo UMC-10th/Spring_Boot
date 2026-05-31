@@ -13,7 +13,9 @@ public enum MemberErrorCode implements BaseErrorCode {
 
     // 회원가입 관련 에러
     FOOD_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER400_1", "유효하지 않은 선호 음식입니다."),
-    TERM_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER400_2", "유효하지 않은 약관입니다.");
+    TERM_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER400_2", "유효하지 않은 약관입니다."),
+
+    PASSWORD_NOT_MATCH(HttpStatus.UNAUTHORIZED, "MEMBER401_1", "비밀번호가 일치하지 않습니다.");
 
     private final HttpStatus status;
     private final String code;
