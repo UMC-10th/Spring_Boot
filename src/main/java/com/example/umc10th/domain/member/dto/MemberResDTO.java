@@ -27,5 +27,9 @@ public class MemberResDTO {
             String email,
             LocalDateTime createdAt
     ) {}
-}
 
+    @Builder
+    public record Login(
+            String accessToken
+    ) {}
+}

@@ -37,11 +37,11 @@ public class MissionService {
     // 홈 화면
     public MissionResDTO.GetHome getHome(MissionReqDTO.GetHome dto, Pageable pageable) {
 
-        Member member = memberRepository.findById(Math.toIntExact(dto.memberId()))
+        Member member = memberRepository.findById(dto.memberId())
                 .orElseThrow(() -> new RuntimeException(GeneralErrorCode.NOT_FOUND.getMessage()));
 
         Page<Mission> missionPage = missionRepository.findByStore_Location_Id(
-                Math.toIntExact(dto.locationId()), pageable
+                dto.locationId(), pageable
         );
 
         return MissionConverter.toGetHome(member, missionPage);

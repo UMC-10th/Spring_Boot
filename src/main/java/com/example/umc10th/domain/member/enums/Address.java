@@ -1,6 +1,7 @@
 package com.example.umc10th.domain.member.enums;
 
 public enum Address {
+    NONE,       // 미설정 (OAuth 회원가입 초기값)
     SEOUL,
     GYEONGGI,
     INCHEON,
