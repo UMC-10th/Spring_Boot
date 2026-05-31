@@ -26,6 +26,15 @@ public class UserRequestDto {
     ) {}
 
     @Builder
+    public record Login(
+            @NotBlank(message = "이메일은 필수입니다.")
+            @Email(message = "올바른 이메일 형식이 아닙니다.")
+            String email,
+            @NotBlank(message = "비밀번호는 필수입니다.")
+            String password
+    ) {}
+
+    @Builder
     public record GetMissionsRequest(
             @NotNull(message = "사용자 ID는 필수입니다")
             Long userId
