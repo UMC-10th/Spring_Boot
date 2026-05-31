@@ -7,11 +7,15 @@ import com.example.umc10th.domain.review.exception.code.ReviewSuccessCode;
 import com.example.umc10th.domain.review.service.ReviewService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
 import com.example.umc10th.global.apiPayload.dto.CursorPage;
+import com.example.umc10th.global.security.AuthMember;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import com.example.umc10th.global.security.AuthMember;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 @Tag(name = "Review", description = "리뷰 관련 API")
 @RestController
@@ -24,11 +28,10 @@ public class ReviewController {
     @Operation(summary = "리뷰 작성", description = "가게에 대한 리뷰를 작성한다.")
     @PostMapping
     public ApiResponse<ReviewResDTO.CreateResult> create(
-            @RequestHeader("Authorization") String token,
+            @AuthenticationPrincipal AuthMember authMember,
             @Valid @RequestBody ReviewReqDTO.Create request
     ) {
-        Long userId = 1L;
-        ReviewResDTO.CreateResult result = reviewService.create(userId, request);
+        ReviewResDTO.CreateResult result = reviewService.create(authMember.getId(), request);
         return ApiResponse.onSuccess(ReviewSuccessCode.REVIEW_CREATED, result);
     }
 
@@ -39,14 +42,14 @@ public class ReviewController {
     )
     @GetMapping("/my")
     public ApiResponse<CursorPage<ReviewResDTO.MyReviewItem>> getMyReviews(
-            @Valid @RequestBody ReviewReqDTO.MyReviews request,
+            @AuthenticationPrincipal AuthMember authMember,
             @RequestParam(defaultValue = "ID") ReviewSortType sortBy,
             @RequestParam(required = false) Long cursorId,
             @RequestParam(required = false) Integer cursorRating,
             @RequestParam(defaultValue = "10") Integer size
     ) {
         CursorPage<ReviewResDTO.MyReviewItem> result = reviewService.getMyReviews(
-                request.memberId(), sortBy, cursorId, cursorRating, size
+                authMember.getId(), sortBy, cursorId, cursorRating, size
         );
         return ApiResponse.onSuccess(ReviewSuccessCode.REVIEW_LIST_OK, result);
     }

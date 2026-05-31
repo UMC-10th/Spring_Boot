@@ -7,9 +7,8 @@ import com.example.umc10th.domain.member.entity.enums.Gender;
 import com.example.umc10th.domain.member.entity.enums.SocialType;
 import com.example.umc10th.domain.mission.entity.Mission;
 import com.example.umc10th.domain.mission.entity.MissionParticipation;
-import org.springframework.data.domain.Page;
 
-import java.util.List;
+import java.util.UUID;
 
 public class MemberConverter {
 

@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import com.example.umc10th.global.security.AuthMember;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 @Tag(name = "Mission", description = "미션 관련 API")
 @RestController
@@ -20,45 +22,42 @@ public class MissionController {
     @Operation(summary = "미션 진행률 조회")
     @GetMapping("/progress")
     public ApiResponse<MissionResDTO.Progress> getProgress(
-            @RequestHeader("Authorization") String token
+            @AuthenticationPrincipal AuthMember authMember
     ) {
         Long userId = 1L;
-        MissionResDTO.Progress result = missionService.getProgress(userId);
+        MissionResDTO.Progress result = missionService.getProgress(authMember.getId());
         return ApiResponse.onSuccess(MissionSuccessCode.MISSION_PROGRESS_OK, result);
     }
 
     @Operation(summary = "홈 미션 목록 조회")
     @GetMapping
     public ApiResponse<MissionResDTO.MissionList> getMissions(
-            @RequestHeader("Authorization") String token,
+            @AuthenticationPrincipal AuthMember authMember,
             @RequestParam Long areaId,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size
     ) {
-        Long userId = 1L;
-        MissionResDTO.MissionList result = missionService.getMissions(userId,areaId, page, size);
+        MissionResDTO.MissionList result = missionService.getMissions(authMember.getId(),areaId, page, size);
         return ApiResponse.onSuccess(MissionSuccessCode.MISSION_LIST_OK, result);
     }
 
     @Operation(summary = "미션 도전하기")
     @PostMapping("/{missionId}/participate")
     public ApiResponse<MissionResDTO.ParticipateResult> participate(
-            @RequestHeader("Authorization") String token,
+            @AuthenticationPrincipal AuthMember authMember,
             @PathVariable Long missionId
     ) {
-        Long userId = 1L;
-        MissionResDTO.ParticipateResult result = missionService.participate(userId, missionId);
+        MissionResDTO.ParticipateResult result = missionService.participate(authMember.getId(), missionId);
         return ApiResponse.onSuccess(MissionSuccessCode.MISSION_PARTICIPATE_OK, result);
     }
 
     @Operation(summary = "미션 성공 처리")
     @PatchMapping("/{missionId}/complete")
     public ApiResponse<MissionResDTO.CompleteResult> complete(
-            @RequestHeader("Authorization") String token,
+            @AuthenticationPrincipal AuthMember authMember,
             @PathVariable Long missionId
     ) {
-        Long userId = 1L;
-        MissionResDTO.CompleteResult result = missionService.complete(userId, missionId);
+        MissionResDTO.CompleteResult result = missionService.complete(authMember.getId(), missionId);
         return ApiResponse.onSuccess(MissionSuccessCode.MISSION_COMPLETE_OK, result);
     }
 }
