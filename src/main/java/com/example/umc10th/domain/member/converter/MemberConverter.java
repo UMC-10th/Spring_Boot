@@ -3,6 +3,8 @@ package com.example.umc10th.domain.member.converter;
 import com.example.umc10th.domain.member.dto.MemberReqDTO;
 import com.example.umc10th.domain.member.dto.MemberResDTO;
 import com.example.umc10th.domain.member.entity.Member;
+import com.example.umc10th.domain.member.entity.enums.Gender;
+import com.example.umc10th.domain.member.entity.enums.SocialType;
 import com.example.umc10th.domain.mission.entity.Mission;
 import com.example.umc10th.domain.mission.entity.MissionParticipation;
 import org.springframework.data.domain.Page;
@@ -13,6 +15,32 @@ public class MemberConverter {
 
     private MemberConverter() {}
 
+    public static Member toMember(MemberReqDTO.Join req, String encodedPassword) {
+        return Member.builder()
+                .name(req.name())
+                .email(req.email())
+                .password(encodedPassword)              // BCrypt 해시값 (서비스에서 인코딩됨)
+                .gender(parseGender(req.gender()))      // String → enum 변환
+                .birthDate(req.birthDate())
+                .address(req.address())
+                .socialType(SocialType.LOCAL)           // 자체 가입 = LOCAL
+                .socialUid(UUID.randomUUID().toString())// 자체 가입은 UID 무의미 → 랜덤
+                .build();
+    }
+
+    // 성별 문자열을 enum으로 변환 (DTO에선 String으로 받았지만 엔티티는 enum)
+    private static Gender parseGender(String value) {
+        if (value == null || value.isBlank()) return Gender.MALE;  // 기본값 임시 정책
+        return Gender.valueOf(value.toUpperCase());
+    }
+
+    public static MemberResDTO.JoinResult toJoinResult(Member member) {
+        return MemberResDTO.JoinResult.builder()
+                .memberId(member.getId())
+                .createdAt(member.getCreatedAt())
+                .build();
+    }
+    
     public static MemberResDTO.MyPage toMyPage(Member member, long reviewCount) {
         return MemberResDTO.MyPage.builder()
                 .memberId(member.getId())

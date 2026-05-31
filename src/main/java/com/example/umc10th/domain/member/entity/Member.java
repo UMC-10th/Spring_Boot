@@ -25,6 +25,10 @@ public class Member extends BaseEntity {
     @Column(name = "member_name", nullable = false, length = 30)
     private String name;
 
+    //폼 로그인용 비밀번호 (BCrypt 해시값 저장)
+    @Column(name = "password", nullable = false, length = 100)
+    private String password;
+
     @Column(name= "gender", nullable = false, length = 10)
     @Enumerated(EnumType.STRING)
     private Gender gender;
@@ -35,7 +39,7 @@ public class Member extends BaseEntity {
     @Column(name = "address", length = 255)
     private String address;
 
-    @Column(name = "email", nullable = false, length = 50)
+    @Column(name = "email", nullable = false, length = 50, unique = true)
     private String email;
 
     @Builder.Default
