@@ -24,6 +24,8 @@ import com.example.umc10th.domain.mission.entity.mapping.MemberMission;
 import com.example.umc10th.domain.mission.repository.MemberMissionRepository;
 import com.example.umc10th.domain.mission.repository.MissionRepository;
 import com.example.umc10th.global.enums.Address;
+import com.example.umc10th.global.security.entity.AuthMember;
+import com.example.umc10th.global.security.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.data.domain.Page;
@@ -48,11 +50,22 @@ public class MemberService {
     private final MemberMissionRepository memberMissionRepository;
     private final MissionRepository missionRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
-    public MemberResDTO.MyPage getMyPage() {
-        Member member = memberRepository.findById(CURRENT_MEMBER_ID)
+    public MemberResDTO.Login login(MemberReqDTO.Login dto) {
+        Member member = memberRepository.findByEmail(dto.email())
                 .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
-        return MemberConverter.toMyPageResponse(member);
+
+        if (!passwordEncoder.matches(dto.password(), member.getPassword())) {
+            throw new MemberException(MemberErrorCode.MEMBER_PASSWORD_INVALID);
+        }
+
+        String token = jwtUtil.createAccessToken(new AuthMember(member));
+        return new MemberResDTO.Login(token);
+    }
+
+    public MemberResDTO.MyPage getMyPage(AuthMember authMember) {
+        return MemberConverter.toMyPageResponse(authMember.getMember());
     }
 
     @Transactional
