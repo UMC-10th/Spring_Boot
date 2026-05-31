@@ -52,7 +52,7 @@ public class Member extends BaseEntity {
     private String socialUid;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "social_type", nullable = false)
+    @Column(name = "social_type", nullable = false, length = 20)
     @Builder.Default
     private SocialType socialType = SocialType.LOCAL;
 

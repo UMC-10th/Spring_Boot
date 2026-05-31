@@ -5,10 +5,12 @@ import com.example.umc10th.domain.member.dto.MemberResDTO;
 import com.example.umc10th.domain.member.exception.code.MemberSuccessCode;
 import com.example.umc10th.domain.member.service.MemberService;
 import com.example.umc10th.global.apiPayload.ApiResponse;
+import com.example.umc10th.global.security.AuthMember;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,8 +49,19 @@ public class MemberController {
 
     // 3. 마이페이지 조회
     @GetMapping("/members/me")
-    public ApiResponse<MemberResDTO.MyPage> getMyPage(@RequestParam Long memberId) {
-        MemberResDTO.MyPage result = memberService.getMyPage(memberId);
+    public ApiResponse<MemberResDTO.MyPage> getMyPage(
+            @AuthenticationPrincipal AuthMember authMember
+    ) {
+        MemberResDTO.MyPage result = memberService.getMyPage(authMember.getMember());
         return ApiResponse.onSuccess(MemberSuccessCode.GET_MY_PAGE, result);
+    }
+
+    // 4. 로그인
+    @PostMapping("/auth/login")
+    public ApiResponse<MemberResDTO.Login> login(
+            @Valid @RequestBody MemberReqDTO.Login request
+    ) {
+        MemberResDTO.Login result = memberService.login(request);
+        return ApiResponse.onSuccess(MemberSuccessCode.LOGIN, result);
     }
 }

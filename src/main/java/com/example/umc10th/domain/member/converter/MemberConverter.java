@@ -100,4 +100,10 @@ public class MemberConverter {
                 .pageInfo(PageInfoDTO.from(missionPage)) // 페이지 정보 변환
                 .build();
     }
+
+    public static MemberResDTO.Login toLogin(String accessToken) {
+        return MemberResDTO.Login.builder()
+                .accessToken(accessToken)
+                .build();
+    }
 }
