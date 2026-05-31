@@ -12,6 +12,9 @@ import com.example.umc10th.domain.mission.entity.enums.MissionStatus;
 import com.example.umc10th.domain.mission.repository.MissionParticipationRepository;
 import com.example.umc10th.domain.review.repository.ReviewRepository;
 import com.example.umc10th.global.apiPayload.dto.OffsetPage;
+import com.example.umc10th.global.security.AuthMember;          
+import com.example.umc10th.global.security.util.JwtUtil;        
+import org.springframework.security.crypto.password.PasswordEncoder;  
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -31,19 +34,44 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final ReviewRepository reviewRepository;
     private final MissionParticipationRepository missionParticipationRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
+    @Transactional
     public MemberResDTO.JoinResult join(MemberReqDTO.Join request) {
-        // TODO: Repository 연결
-        return MemberResDTO.JoinResult.builder()
-                .memberId(1L)
-                .createdAt(LocalDateTime.now())
-                .build();
+        // 이메일 중복 체크 (탈퇴하지 않은 회원 기준)
+        if (memberRepository.existsByEmailAndDeletedAtIsNull(request.email())) {
+            throw new MemberException(MemberErrorCode.DUPLICATE_EMAIL);
+        }
+        // 비밀번호 BCrypt 해싱 (솔트 자동 생성 + 해시에 포함)
+        String encodedPassword = passwordEncoder.encode(request.password());
+
+        // 컨버터로 엔티티 생성 (해싱된 비밀번호 전달)
+        Member member = MemberConverter.toMember(request, encodedPassword);
+
+        // DB 저장
+        Member saved = memberRepository.save(member);
+
+        // 응답 DTO 변환 후 반환
+        return MemberConverter.toJoinResult(saved);
     }
 
     public MemberResDTO.LoginResult login(MemberReqDTO.Login request) {
-        // TODO: Repository 연결
+        // 1. 이메일로 회원 조회 (없으면 비밀번호 불일치와 동일 에러로 처리 → 이메일 존재 여부 노출 방지)
+        Member member = memberRepository.findByEmailAndDeletedAtIsNull(request.email())
+                .orElseThrow(() -> new MemberException(MemberErrorCode.INVALID_PASSWORD));
+
+        // 2. 입력 비밀번호(평문)와 저장된 해시 비교
+        if (!passwordEncoder.matches(request.password(), member.getPassword())) {
+            throw new MemberException(MemberErrorCode.INVALID_PASSWORD);
+        }
+
+        // 3. 인증 통과 → JWT 발급
+        String accessToken = jwtUtil.createAccessToken(new AuthMember(member));
+
+        // 4. 응답 DTO
         return MemberResDTO.LoginResult.builder()
-                .accessToken("dummy-token")
+                .accessToken(accessToken)
                 .tokenType("Bearer")
                 .build();
     }

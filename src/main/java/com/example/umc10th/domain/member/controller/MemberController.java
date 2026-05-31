@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import com.example.umc10th.global.security.AuthMember;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 @Tag(name = "Member", description = "회원 관련 API")
 @RestController
@@ -40,9 +42,8 @@ public class MemberController {
     @Operation(summary = "마이페이지 조회", description = "내 정보를 조회한다.")
     @GetMapping("/my")
     public ApiResponse<MemberResDTO.MyPage> getMyPage(
-            @RequestHeader("Authorization") String token) {
-        Long userId = 1L; // TODO: token에서 userId 추출
-        MemberResDTO.MyPage result = memberService.getMyPage(userId);
+            @AuthenticationPrincipal AuthMember authMember) {
+        MemberResDTO.MyPage result = memberService.getMyPage(authMember.getId());
         return ApiResponse.onSuccess(MemberSuccessCode.MEMBER_FETCH_OK, result);
     }
 
@@ -64,10 +65,10 @@ public class MemberController {
             "JWT 도입 전 임시로 Body의 memberId를 사용한다.")
     @GetMapping("/missions/in-progress")
     public ApiResponse<OffsetPage<MemberResDTO.MissionListItem>> getMyInProgressMissions(
-            @Valid @RequestBody MemberReqDTO.MyMissions request,
+            @AuthenticationPrincipal AuthMember authMember,
             @RequestParam(defaultValue = "0") Integer page,
             @RequestParam(defaultValue = "10") Integer size) {
-        OffsetPage<MemberResDTO.MissionListItem> result = memberService.getMyInProgressMissions(request.memberId(),
+        OffsetPage<MemberResDTO.MissionListItem> result = memberService.getMyInProgressMissions(authMember.getId(),
                 page, size);
         return ApiResponse.onSuccess(MemberSuccessCode.MEMBER_MISSION_LIST_OK, result);
     }

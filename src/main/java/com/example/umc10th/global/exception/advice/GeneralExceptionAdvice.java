@@ -14,6 +14,8 @@ import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +32,22 @@ public class GeneralExceptionAdvice {
         return ResponseEntity
                 .status(errorCode.getStatus())
                 .body(ApiResponse.onFailure(errorCode, null));
+    }
+    
+    // 2. 시큐리티 인증 실패 (401)
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ApiResponse<Void>> handleAuthenticationException(AuthenticationException e) {
+        log.warn("인증 실패: {}", e.getMessage());
+        BaseErrorCode code = GeneralErrorCode.UNAUTHORIZED;
+        return ResponseEntity.status(code.getStatus()).body(ApiResponse.onFailure(code, null));
+    }
+
+    // 2. 시큐리티 인가 실패 (403)
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleAccessDeniedException(AccessDeniedException e) {
+        log.warn("인가 실패: {}", e.getMessage());
+        BaseErrorCode code = GeneralErrorCode.FORBIDDEN;
+        return ResponseEntity.status(code.getStatus()).body(ApiResponse.onFailure(code, null));
     }
 
     // 2. @Valid 검증 실패 (DTO에 붙인 @NotBlank 등)
