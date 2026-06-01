@@ -17,6 +17,7 @@ import com.example.Spring_Boot.domain.store.repository.CategoryRepository;
 import com.example.Spring_Boot.domain.store.repository.RegionRepository;
 import com.example.Spring_Boot.global.apiPayload.code.GeneralErrorCode;
 import com.example.Spring_Boot.global.apiPayload.exception.ProjectException;
+import com.example.Spring_Boot.global.security.auth.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -84,6 +85,11 @@ public class HomeFacadeService {
     }
 
     private Long extractMemberId(String authorization) {
+        return SecurityUtil.getCurrentMemberId()
+                .orElseGet(() -> extractMemberIdFromAuthorization(authorization));
+    }
+
+    private Long extractMemberIdFromAuthorization(String authorization) {
         if (authorization == null || authorization.isBlank()) {
             throw new MemberException(MemberErrorCode.INVALID_AUTHORIZATION);
         }

@@ -4,6 +4,8 @@ import com.example.Spring_Boot.global.apiPayload.ApiResponse;
 import com.example.Spring_Boot.global.apiPayload.code.BaseErrorCode;
 import com.example.Spring_Boot.global.apiPayload.code.GeneralErrorCode;
 import com.example.Spring_Boot.global.apiPayload.exception.ProjectException;
+import com.example.Spring_Boot.global.security.auth.JwtAuthErrorType;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
@@ -20,11 +22,26 @@ public class GeneralExceptionAdvice {
     // Spring Security 인증 실패 예외 처리
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ApiResponse<Void>> handleAuthenticationException(
-            AuthenticationException e
+            AuthenticationException e,
+            HttpServletRequest request
     ) {
-        BaseErrorCode code = GeneralErrorCode.UNAUTHORIZED;
+        BaseErrorCode code = resolveAuthenticationErrorCode(request);
         return ResponseEntity.status(code.getStatus())
                 .body(ApiResponse.onFailure(code, null));
+    }
+
+    private BaseErrorCode resolveAuthenticationErrorCode(HttpServletRequest request) {
+        Object authError = request.getAttribute(JwtAuthErrorType.REQUEST_ATTRIBUTE);
+
+        if (authError == JwtAuthErrorType.EXPIRED_TOKEN) {
+            return GeneralErrorCode.EXPIRED_TOKEN;
+        }
+
+        if (authError == JwtAuthErrorType.INVALID_TOKEN) {
+            return GeneralErrorCode.INVALID_TOKEN;
+        }
+
+        return GeneralErrorCode.UNAUTHORIZED;
     }
 
     // Spring Security 인가 실패 예외 처리

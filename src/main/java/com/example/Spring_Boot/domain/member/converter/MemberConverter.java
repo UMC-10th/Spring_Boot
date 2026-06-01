@@ -3,7 +3,10 @@ package com.example.Spring_Boot.domain.member.converter;
 import com.example.Spring_Boot.domain.member.dto.MemberReqDTO;
 import com.example.Spring_Boot.domain.member.dto.MemberResDTO;
 import com.example.Spring_Boot.domain.member.entity.Member;
+import com.example.Spring_Boot.domain.member.enums.SocialType;
+import com.example.Spring_Boot.global.security.oauth.dto.OAuthDTO;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class MemberConverter {
@@ -51,5 +54,26 @@ public class MemberConverter {
                 .address(member.getAddress())
                 .categoryIds(categoryIds)
                 .build();
+    }
+
+    public static Member toMember(OAuthDTO dto) {
+        return Member.builder()
+                .email(dto.email())
+                .name(limitLength(dto.nickname(), 5))
+                .nickname(limitLength(dto.nickname(), 15))
+                .phoneNumber("소셜로그인")
+                .birth(LocalDate.of(1900, 1, 1))
+                .address("소셜로그인")
+                .socialProvider(dto.provider())
+                .socialUid(dto.socialUid())
+                .build();
+    }
+
+    private static String limitLength(String value, int maxLength) {
+        if (value == null || value.isBlank()) {
+            return "소셜유저";
+        }
+
+        return value.length() <= maxLength ? value : value.substring(0, maxLength);
     }
 }
