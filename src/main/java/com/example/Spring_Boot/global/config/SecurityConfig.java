@@ -34,7 +34,7 @@ public class SecurityConfig {
     private final OAuthSuccessHandler oAuthSuccessHandler;
 
     public JwtAuthFilter jwtAuthFilter() {
-        return new JwtAuthFilter(jwtUtil, customUserDetailsService);
+        return new JwtAuthFilter(jwtUtil, customUserDetailsService, customAuthenticationEntryPoint);
     }
 
     private final String[] allowUris = {

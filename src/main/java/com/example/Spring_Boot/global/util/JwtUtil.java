@@ -1,7 +1,9 @@
 package com.example.Spring_Boot.global.util;
 
 import com.example.Spring_Boot.global.security.auth.AuthMember;
+import com.example.Spring_Boot.global.security.auth.JwtAuthErrorType;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
@@ -15,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -60,6 +63,17 @@ public class JwtUtil {
             return true;
         } catch (JwtException e) {
             return false;
+        }
+    }
+
+    public Optional<JwtAuthErrorType> getAuthError(String token) {
+        try {
+            getClaims(token);
+            return Optional.empty();
+        } catch (ExpiredJwtException e) {
+            return Optional.of(JwtAuthErrorType.EXPIRED_TOKEN);
+        } catch (JwtException | IllegalArgumentException e) {
+            return Optional.of(JwtAuthErrorType.INVALID_TOKEN);
         }
     }
 
