@@ -5,6 +5,7 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 public class UserResponseDto {
+
     @Builder
     public record SignUpResultDto(
             Long userId,
@@ -13,6 +14,8 @@ public class UserResponseDto {
 
     @Builder
     public record HomeResultDto (
-            String welcomeMessage
+            String welcomeMessage,
+            String name,
+            String email
     ) {}
 }
