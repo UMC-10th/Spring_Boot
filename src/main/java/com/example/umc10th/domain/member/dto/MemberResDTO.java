@@ -5,7 +5,12 @@ import java.util.List;
 
 public class MemberResDTO {
 
-    // 1) 회원가입 응답
+    // 1) 로그인 응답
+    public record Login(
+            String accessToken
+    ) {}
+
+    // 2) 회원가입 응답
     public record SignUp(
             Long memberId,
             String nickname,

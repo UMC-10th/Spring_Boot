@@ -7,7 +7,9 @@ import com.example.umc10th.domain.member.service.MemberService;
 import com.example.umc10th.domain.member.exception.code.MemberSuccessCode;
 import com.example.umc10th.global.apiPayload.ApiResponse;
 import com.example.umc10th.global.apiPayload.code.GeneralSuccessCode;
+import com.example.umc10th.global.security.entity.AuthMember;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,7 +19,18 @@ public class MemberController {
 
     private final MemberService memberService;
 
-    // 1) 회원가입
+    // 1) 로그인
+    @PostMapping("/auth/login")
+    public ApiResponse<MemberResDTO.Login> login(
+            @RequestBody @Valid MemberReqDTO.Login dto
+    ) {
+        return ApiResponse.onSuccess(
+                MemberSuccessCode.MEMBER_LOGIN_SUCCESS,
+                memberService.login(dto)
+        );
+    }
+
+    // 2) 회원가입
     @PostMapping("/auth/signup")
     public ApiResponse<MemberResDTO.SignUp> signUp(
             @RequestBody @Valid MemberReqDTO.SignUp dto
@@ -43,10 +56,12 @@ public class MemberController {
 
     // 3) 마이페이지 조회
     @GetMapping("/members/me")
-    public ApiResponse<MemberResDTO.MyPage> getMyPage() {
+    public ApiResponse<MemberResDTO.MyPage> getMyPage(
+            @AuthenticationPrincipal AuthMember member
+    ) {
         return ApiResponse.onSuccess(
                 MemberSuccessCode.MEMBER_GET_INFO_SUCCESS,
-                memberService.getMyPage()
+                memberService.getMyPage(member)
         );
     }
 }
