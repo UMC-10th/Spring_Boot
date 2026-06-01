@@ -1,0 +1,28 @@
+package com.example.umc10th.domain.memberMission.controller;
+
+import com.example.umc10th.domain.memberMission.dto.MemberMissionResDTO;
+import com.example.umc10th.domain.memberMission.service.MemberMissionService;
+import com.example.umc10th.global.apiPayload.ApiResponse;
+import com.example.umc10th.global.apiPayload.code.GeneralSuccessCode;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/members")
+public class MemberMissionController {
+
+    private final MemberMissionService memberMissionService;
+
+    @GetMapping("/{memberId}/missions")
+    public ApiResponse<MemberMissionResDTO.MyMissionListDTO> getMyMissions(
+            @PathVariable Long memberId,
+            @RequestParam Boolean isComplete,
+            @RequestParam(defaultValue = "0") Integer page
+    ) {
+        return ApiResponse.onSuccess(
+                GeneralSuccessCode.OK,
+                memberMissionService.getMyMissions(memberId, isComplete, page)
+        );
+    }
+}
