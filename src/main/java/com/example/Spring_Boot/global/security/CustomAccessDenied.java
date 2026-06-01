@@ -1,30 +1,23 @@
 package com.example.Spring_Boot.global.security;
 
-import com.example.Spring_Boot.global.apiPayload.ApiResponse;
-import com.example.Spring_Boot.global.apiPayload.code.BaseErrorCode;
-import com.example.Spring_Boot.global.apiPayload.code.GeneralErrorCode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import java.io.IOException;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
+@RequiredArgsConstructor
 public class CustomAccessDenied implements AccessDeniedHandler {
+
+    private final HandlerExceptionResolver handlerExceptionResolver;
 
     @Override
     public void handle(
             HttpServletRequest request,
             HttpServletResponse response,
             AccessDeniedException accessDeniedException
-    ) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        BaseErrorCode code = GeneralErrorCode.FORBIDDEN;
-
-        response.setContentType("application/json;charset=UTF-8");
-        response.setStatus(code.getStatus().value());
-
-        ApiResponse<Void> errorResponse = ApiResponse.onFailure(code, null);
-        objectMapper.writeValue(response.getOutputStream(), errorResponse);
+    ) {
+        handlerExceptionResolver.resolveException(request, response, null, accessDeniedException);
     }
 }
